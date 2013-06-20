@@ -2,7 +2,6 @@ function [ map ] = getMapping( code_size )
 %GETMAPPING Summary of this function goes here
 %   Detailed explanation goes here
 
-    
     % get the total number of possible codes
     table_size = 2^code_size - 1;
     
@@ -17,7 +16,7 @@ function [ map ] = getMapping( code_size )
     max_codes = code_size*(code_size - 1) + 2 + 1;
     
     for i = 0:table_size
-
+        
         % convert a decimal number to a binary representation
         % in vector form
         n = bitget(i,1:code_size);
@@ -34,16 +33,9 @@ function [ map ] = getMapping( code_size )
             % non uniform nodes take value max_codes
             % -1 since the codes starts from 0
             map(i) = max_codes - 1;
-            i
-            %table(i+1) = 
         end
         
-        
     end
-    
-    
-    
-    
     
 end
 
