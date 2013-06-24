@@ -33,6 +33,10 @@ descriptor = zeros(region_cols*region_rows,mapping.num*hist_number);
 % DEFINISCI VETTORE DI IMMAGINI LBP
 lbp_images = cell(hist_number,1);
 
+
+% counter for descriptor
+counter = 1;
+
 for i = 1:hist_number
     
     % CALCOLA LBP RAGGIO I
@@ -47,8 +51,7 @@ for i = 1:hist_number
     % INSERISCI IN VETTORE IMMAGINI
     lbp_images{i} = lbp_image;
     
-
-    counter = 1;
+    
     % DIVIDO IN REGIONI
     for j = 1:region_cols
         for k = 1:region_rows
@@ -75,12 +78,6 @@ for i = 1:hist_number
             counter = counter + 1;
         end
     end
-    
-    % PER OGNI REGIONE CALCOLA HIST
-    
-    
-    % CONCATENA HIST IN DESCRITTORE GLOBALEEE
-
 
 end
 
