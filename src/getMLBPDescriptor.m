@@ -33,24 +33,24 @@ function [ descriptor ] = getMLBPDescriptor( image, mapping, R, region_rows, reg
     % Define an images vector
     lbp_images = cell(hist_number,1);
 
-    % counter for descriptor
-    counter = 1;
+    
 
     for i = 1:hist_number
 
         % CALCOLA LBP RAGGIO I
-        lbp_image = lbp(I,i,8,mapping,'i');
+        lbp_image = lbp(image,i,8,mapping,'i');
 
         % RITAGLIA IMMAGINE A DIMENSIONE MINORE (CROP)
         if (i ~= hist_number)
             lbp_image = lbp_image(hist_number-i+1:end-(hist_number-i), hist_number-i+1:end-(hist_number-i));
         end
 
-
         % INSERISCI IN VETTORE IMMAGINI
         lbp_images{i} = lbp_image;
 
-
+        % counter for descriptor
+        counter = 1;
+    
         % DIVIDO IN REGIONI
         for j = 1:region_cols
             for k = 1:region_rows

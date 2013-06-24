@@ -1,9 +1,10 @@
-
-% 
-
-
 % get the image
-I=imread('grey_zebra.jpg');%'grey_brick01.jpg');
+I1 = imread('grey_brick01.jpg');%'grey_brick01.jpg');
+I2 = imread('grey_sub_brick01.jpg');%'grey_brick01.jpg');
+I3 = imread('sub02_1.1.02.png');%'grey_brick01.jpg');
+I4 = imread('grey_brick01.jpg');
+
+
 
 % map the value to uniform implementation
 mapping=getmapping(8,'u2');
@@ -16,8 +17,53 @@ hist_number = 3;%4;
 region_rows = 3;
 region_cols = 3;
 
-descriptor1 = getMLBPDescriptor( I, mapping, hist_number, region_rows, region_cols );
-%descriptor2 = getMLBPDescriptor( I, mapping, hist_number, region_rows, region_cols );
+descriptor1 = getMLBPDescriptor( I1, mapping, hist_number, region_rows, region_cols );
+descriptor2 = getMLBPDescriptor( I2, mapping, hist_number, region_rows, region_cols );
+descriptor3 = getMLBPDescriptor( I3, mapping, hist_number, region_rows, region_cols );
+descriptor4 = getMLBPDescriptor( I4, mapping, hist_number, region_rows, region_cols );
+
+% measure = getClassifierFusion(descriptor1,descriptor1)
+% measure1 = getClassifierFusion(descriptor1,descriptor2)
+% measure2 = getClassifierFusion(descriptor1,descriptor3)
+% measure3 = getClassifierFusion(descriptor1,descriptor4)
+
+Wpca1 = pca(descriptor1);
+valoripcati1 = descriptor1*Wpca1;
+Wpca2 = pca(descriptor2);
+valoripcati2 = descriptor2*Wpca2;
+Wpca3 = pca(descriptor3);
+valoripcati3 = descriptor3*Wpca3;
+Wpca4 = pca(descriptor4);
+valoripcati4 = descriptor4*Wpca4;
+
+% measure = getClassifierFusion(valoripcati1,valoripcati1)
+% measure1 = getClassifierFusion(valoripcati1,valoripcati2)
+% measure2 = getClassifierFusion(valoripcati1,valoripcati3)
+% measure3 = getClassifierFusion(valoripcati1,valoripcati4)
+
+options = [];
+options.Fisherface = 1;
+
+gnd = [ones(59,1); ones(59,1)*2; ones(59,1)*3 ];
+[eigvector, eigvalue] = LDA(gnd, options, descriptor1');
+lda1 = descriptor1'*eigvector;
+
+gnd = [ones(59,1); ones(59,1)*2; ones(59,1)*3 ];
+[eigvector, eigvalue] = LDA(gnd, options, descriptor2');
+lda2 = descriptor2'*eigvector;
+
+gnd = [ones(59,1); ones(59,1)*2; ones(59,1)*3 ];
+[eigvector, eigvalue] = LDA(gnd, options, descriptor3');
+lda3 = descriptor3'*eigvector;
+
+gnd = [ones(59,1); ones(59,1)*2; ones(59,1)*3 ];
+[eigvector, eigvalue] = LDA(gnd, options, descriptor4');
+lda4 = descriptor4'*eigvector;
+
+measure = getClassifierFusion(lda1,lda1)
+measure1 = getClassifierFusion(lda1,lda2)
+measure2 = getClassifierFusion(lda1,lda3)
+measure3 = getClassifierFusion(lda1,lda4)
 
 
 
@@ -25,83 +71,15 @@ descriptor1 = getMLBPDescriptor( I, mapping, hist_number, region_rows, region_co
 
 
 
-% % Determine the dimensions of the input image.
-% xsize = size(I,1) - 2*hist_number; 
-% ysize = size(I,2) - 2*hist_number; 
-% region_xsize = round(xsize/region_cols);
-% region_ysize = round(ysize/region_rows);
-% 
-% % define global descriptor
-% % row = region
-% % column = histograms at diffentent radius
-% % NB descriptor count region in this order:
-% %
-% %   3   6   9
-% %   2   5   8
-% %   1   4   7
-% %
-% descriptor = zeros(region_cols*region_rows,mapping.num*hist_number);
-% 
-% % DEFINISCI VETTORE DI IMMAGINI LBP
-% lbp_images = cell(hist_number,1);
-% 
-% 
-% % counter for descriptor
-% counter = 1;
-% 
-% for i = 1:hist_number
-%     
-%     % CALCOLA LBP RAGGIO I
-%     lbp_image = lbp(I,i,8,mapping,'i');
-% 
-%     % RITAGLIA IMMAGINE A DIMENSIONE MINORE (CROP)
-%     if (i ~= hist_number)
-%         lbp_image = lbp_image(hist_number-i+1:end-(hist_number-i), hist_number-i+1:end-(hist_number-i));
-%     end
-%     
-% 
-%     % INSERISCI IN VETTORE IMMAGINI
-%     lbp_images{i} = lbp_image;
-%     
-%     
-%     % DIVIDO IN REGIONI
-%     for j = 1:region_cols
-%         for k = 1:region_rows
-%                 
-%             if j == region_cols
-%                 endcol = size(lbp_image,1);
-%             else
-%                 endcol = j*region_xsize;
-%             end
-%             if k == region_rows
-%                 endrow = size(lbp_image,2);
-%             else
-%                 endrow = k*region_ysize;
-%             end
-%                 
-%             M = lbp_image((j-1)*region_xsize+1:endcol, (k-1)*region_ysize+1:endrow);
-%            
-%             % compute histogram of subregion M
-%             h = hist(M(:),0:(mapping.num-1));
-%             % normalizie histogram
-%             h = h/sum(h);
-%             
-%             descriptor(counter, ((i-1)*mapping.num)+1:i*mapping.num) = h;
-%             counter = counter + 1;
-%         end
-%     end
-% 
-% end
-
-
-% CALCOLA REGIONAL PATTERN
 
 
 
 
-% descriptor = zeros(1,mapping.num*hist_number);
-% 
-%     h = lbp(I,i,8,mapping,'nh');
-% 
-% 
-% descriptor(((i-1)*mapping.num)+1:i*mapping.num) = h;
+
+
+
+
+
+
+
+
