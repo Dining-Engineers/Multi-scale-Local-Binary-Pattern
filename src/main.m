@@ -18,7 +18,17 @@ xsize = size(I,1) - 2*hist_number;
 ysize = size(I,2) - 2*hist_number; 
 region_xsize = round(xsize/region_cols);
 region_ysize = round(ysize/region_rows);
-    
+
+% define global descriptor
+% row = region
+% column = histograms at diffentent radius
+% NB descriptor count region in this order:
+%
+%   3   6   9
+%   2   5   8
+%   1   4   7
+%
+descriptor = zeros(region_cols*region_rows,mapping.num*hist_number);
 
 % DEFINISCI VETTORE DI IMMAGINI LBP
 lbp_images = cell(hist_number,1);
@@ -38,6 +48,7 @@ for i = 1:hist_number
     lbp_images{i} = lbp_image;
     
 
+    counter = 1;
     % DIVIDO IN REGIONI
     for j = 1:region_cols
         for k = 1:region_rows
@@ -54,9 +65,14 @@ for i = 1:hist_number
             end
                 
             M = lbp_image((j-1)*region_xsize+1:endcol, (k-1)*region_ysize+1:endrow);
+           
+            % compute histogram of subregion M
+            h = hist(M(:),0:(mapping.num-1));
+            % normalizie histogram
+            h = h/sum(h);
             
-            figure;
-            imshow(M);
+            descriptor(counter, ((i-1)*mapping.num)+1:i*mapping.num) = h;
+            counter = counter + 1;
         end
     end
     
@@ -68,8 +84,6 @@ for i = 1:hist_number
 
 end
 
-
-% DEFINISCI SOTTOREGIONI (DA M0 a Mj-1)
 
 % CALCOLA REGIONAL PATTERN
 
