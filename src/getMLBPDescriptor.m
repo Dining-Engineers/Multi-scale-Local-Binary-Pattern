@@ -27,8 +27,8 @@ function [ descriptor ] = getMLBPDescriptor( image, mapping, R, region_rows, reg
     % Determine the dimensions of the input image.
     xsize = size(image, 1) - 2*R; 
     ysize = size(image, 2) - 2*R; 
-    region_xsize = round(xsize/region_cols);
-    region_ysize = round(ysize/region_rows);
+    region_xsize = floor(xsize/region_cols);
+    region_ysize = floor(ysize/region_rows);
     
     % Define an images vector
     lbp_images = cell(hist_number,1);
@@ -55,18 +55,18 @@ function [ descriptor ] = getMLBPDescriptor( image, mapping, R, region_rows, reg
         for j = 1:region_cols
             for k = 1:region_rows
 
-                if j == region_cols
-                    endcol = size(lbp_image,1);
-                else
+%                 if j == region_cols
+%                     endcol = size(lbp_image,1);
+%                 else
                     endcol = j*region_xsize;
-                end
-                if k == region_rows
-                    endrow = size(lbp_image,2);
-                else
+%                 end
+%                 if k == region_rows
+%                     endrow = size(lbp_image,2);
+%                 else
                     endrow = k*region_ysize;
-                end
+%                 end
 
-                M = lbp_image((j-1)*region_xsize+1:endcol, (k-1)*region_ysize+1:endrow);
+                M = lbp_image( (j-1)*region_xsize+1:endcol, (k-1)*region_ysize+1:endrow );
 
                 % compute histogram of subregion M
                 h = hist(M(:),0:(mapping.num-1));
