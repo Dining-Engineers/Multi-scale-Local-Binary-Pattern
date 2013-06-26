@@ -1,24 +1,66 @@
 % get the image
-I1 = imread('grey_brick01.jpg');%'grey_brick01.jpg');
-I2 = imread('grey_sub_brick01.jpg');%'grey_brick01.jpg');
-I3 = imread('sub02_1.1.02.png');%'grey_brick01.jpg');
-I4 = imread('grey_brick01.jpg');
+image1 = imread('grey_brick01.jpg');
+image2 = imread('grey_sub_brick01.jpg');
+image3 = imread('sub02_1.1.02.png');
+image4 = imread('grey_brick01.jpg');
 
 % map the value to uniform implementation
 mapping = getmapping(8,'u2');
 
-% number of lbp/histogram 
+% radius
 radii = [ 3 6 9 12 ];
 
 % define region rows and columns
 % an histogram for each region will be calculated
-region_rows = 3;
-region_cols = 3;
+%
+% for example if you set
+%         
+%   num_region_rows = 3;
+%   num_region_cols = 3;
+%         
+% you obtain
+%   _ _ _ _ _ _ 
+%  |_1_|_2_|_3_|
+%  |_4_|_5_|_6_|
+%  |_7_|_8_|_9_|
+%
+num_region_rows = 3;
+num_region_cols = 3;
 
-descriptor1 = getMLBPDescriptor( I1, mapping, hist_number, region_rows, region_cols );
-descriptor2 = getMLBPDescriptor( I2, mapping, hist_number, region_rows, region_cols );
-descriptor3 = getMLBPDescriptor( I3, mapping, hist_number, region_rows, region_cols );
-descriptor4 = getMLBPDescriptor( I4, mapping, hist_number, region_rows, region_cols );
+hist_number = length(radii);
+
+descriptor1 = getMLBPDescriptor( image1, mapping, hist_number, num_region_rows, num_region_cols );
+descriptor2 = getMLBPDescriptor( image2, mapping, hist_number, num_region_rows, num_region_cols );
+descriptor3 = getMLBPDescriptor( image3, mapping, hist_number, num_region_rows, num_region_cols );
+descriptor4 = getMLBPDescriptor( image4, mapping, hist_number, num_region_rows, num_region_cols );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 % measure = getClassifierFusion(descriptor1,descriptor1)
 % measure1 = getClassifierFusion(descriptor1,descriptor2)

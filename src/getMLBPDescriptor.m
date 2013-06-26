@@ -1,67 +1,63 @@
 %GETMLBPDESCRIPTOR return a global descriptor of an image
-%   DESCRIPTOR = GETMLBPDESCRIPTOR( IMAGE, MAPPING, R, REGION_ROWS, REGION_COLS )
+%   DESCRIPTOR = GETMLBPDESCRIPTOR( IMAGE, MAPPING, RADII, REGION_ROWS, REGION_COLS )
 %
 %       IMAGE is an image
 %       MAPPING is a map of values that encode the value of basic LBP
-%       R is the max value of radius. Also represents the number of histograms for each region
+%       RADII is a vector of radius. length(RADII) represents the number of histograms for each region
 %       REGION_ROWS * REGION_COLS is the number of regions
 
 
-function [ descriptor ] = getMLBPDescriptor( image, mapping, lbp_radii, region_rows, region_cols )
+function [ descriptor ] = getMLBPDescriptor( image, mapping, radii, num_region_rows, num_region_cols )
 % Version 0.1
 % Authors: Andrea Rizzo and Matteo Bruni
 
     % define global descriptor
-    % row = region
-    % column = histograms at diffentent radius
+    % descriptor's rows are the local descriptors of regions
+    % descriptor's column are the bins of histograms at diffentent radius
     %
     % N.B.: descriptor count region in this order:
     %
-    %   1   2   3
-    %   4   5   6
-    %   7   8   9
+    %   _ _ _ _ _ _ 
+    %  |_1_|_2_|_3_|
+    %  |_4_|_5_|_6_|
+    %  |_7_|_8_|_9_|
+    %
+
+    %represents the number of histograms for each region
+    hist_number = length(radii);
     
-    hist_number = length(lbp_radii);
+    % initialization of global descriptor
+    descriptor = zeros( num_region_cols*num_region_rows, mapping.num*hist_number );
     
-    descriptor = zeros(region_cols*region_rows, mapping.num*hist_number);
-    
+    %     NOT USED
+    %     replaced by the function gridBound
     % Determine the dimensions of the input image.
-    % removing the border of the maximum radius 
+    % removing the border of the maximum radius
+    %{
     xsize = size(image, 1) - 2*lbp_radii(end); 
     ysize = size(image, 2) - 2*lbp_radii(end); 
     region_xsize = floor(xsize/region_cols);
     region_ysize = floor(ysize/region_rows);
-    
-    % Define an images vector
-    % lbp_images = cell(hist_number,1);
-
-    for i = lbp_radii
+    %}
+ 
+    for i = radii
         
         % apply gauss smoothing with sigma = LBP radius
         myfilter = fspecial( 'gaussian', [3 3], i );
         image_smoothed = imfilter( image, myfilter, 'replicate' );
 
         % CALCOLA LBP RAGGIO I
-        lbp_image = lbp( image_smoothed, i,8,mapping,'i' );
+        lbp_image = lbp( image_smoothed, i, 8, mapping, 'i' );
         
         % RITAGLIA IMMAGINE A DIMENSIONE MINORE (CROP)
-        if (i ~= lbp_radii(end) )
-            lbp_image = lbp_image(lbp_radii(end)-i+1:end-(lbp_radii(end)-i), lbp_radii(end)-i+1:end-(lbp_radii(end)-i));
+        if (i ~= radii(end) )
+            lbp_image = lbp_image( radii(end)-i+1:end-(radii(end)-i), radii(end)-i+1:end-(radii(end)-i) );
         end
-
-        % INSERISCI IN VETTORE IMMAGINI
-        % lbp_images{i} = lbp_image;
-
-       
-    
         
-        
-        for k=0:(region_rows*region_cols-1)
-            [rMin, rMax, cMin, cMax] = gridBounds( size(lbp_image), region_rows, region_cols, k);
+        for k = 0:( num_region_rows*num_region_cols - 1 )
+            [rMin, rMax, cMin, cMax] = gridBounds( size(lbp_image), num_region_rows, num_region_cols, k );
             M = lbp_image(rMin:rMax, cMin:cMax );
-            
 
-            
             % compute histogram of subregion M
             h = hist(M(:),0:(mapping.num-1));
             % normalizie histogram
@@ -70,10 +66,10 @@ function [ descriptor ] = getMLBPDescriptor( image, mapping, lbp_radii, region_r
             descriptor( k+1, ((i-1)*mapping.num)+1:i*mapping.num ) = h;
 
         end
-        
-        
-         % counter for descriptor
-        counter = 1;
+
+%{
+        % counter for descriptor
+        % counter = 1;
         
 %         % DIVIDO IN REGIONI
 %         for j = 1:region_cols
@@ -101,8 +97,6 @@ function [ descriptor ] = getMLBPDescriptor( image, mapping, lbp_radii, region_r
 %                 counter = counter + 1;
 %             end
 %         end
-
+%}
     end
-
 end
-
