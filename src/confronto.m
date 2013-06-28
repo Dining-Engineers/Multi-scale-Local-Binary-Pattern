@@ -1,9 +1,22 @@
-% get images
-% image1 = imread('grey_brick01.jpg');
-% image2 = mat2gray(imread('grey_brick01.jpg'));
+% Authors:  - Andrea Rizzo, andrearizzo [at] outlook.com
+%           - Matteo Bruni, matteo.bruni [at] gmail.com
+%             
+% Date: 20/06/2013
+%
+% You are free to use, change, or redistribute this code in any way you
+% want for non-commercial purposes. However, it is appreciated if you 
+% maintain the name of the original author.
+%
+% (C) A.Rizzo, M. Bruni
 
-image1 = imread('B1.bmp');
-image2 = imread('F1.bmp');
+% get images
+image1 = imread('grey_brick01.jpg');
+image2 = rgb2gray(imread('grey_brick01mod.jpg'));
+
+%image1 = rgb2gray(imread('B1.bmp'));
+%image2 = imread('F1.bmp');
+image1 = edge(image1,'canny', []);
+image2 = edge(image2,'canny', 0.2);
 
 % map the value to uniform implementation
 mapping = getmapping(8,'u2');
@@ -30,8 +43,9 @@ for i = 1:size(descriptor2, 1)
 %        A(i,j) = getLogLikelihoodRatio( descriptor2(i, : ), descriptor1( j, : ) );
        
    end
-   
+  
    figure;
    subplot(1,2,1), imshow(showGridMeasure(image2, num_region_rows, num_region_cols, i-1 )  )
    subplot(1,2,2), imshow(showGridMeasure(image1, num_region_rows, num_region_cols, A(i,:) )  )
 end
+A

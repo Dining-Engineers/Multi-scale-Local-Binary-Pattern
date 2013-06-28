@@ -6,6 +6,17 @@
 %       RADII is a vector of radius. length(RADII) represents the number of histograms for each region
 %       REGION_ROWS * REGION_COLS is the number of regions
 
+% Authors:  - Andrea Rizzo, andrearizzo [at] outlook.com
+%           - Matteo Bruni, matteo.bruni [at] gmail.com
+%             
+% Date: 20/06/2013
+%
+% You are free to use, change, or redistribute this code in any way you
+% want for non-commercial purposes. However, it is appreciated if you 
+% maintain the name of the original author.
+%
+% (C) A.Rizzo, M. Bruni
+
 
 function [ descriptor ] = getMLBPDescriptor( image, mapping, radii, num_region_rows, num_region_cols )
 % Version 0.1
@@ -46,6 +57,11 @@ function [ descriptor ] = getMLBPDescriptor( image, mapping, radii, num_region_r
         myfilter = fspecial( 'gaussian', [3 3], i );
         image_smoothed = imfilter( image, myfilter, 'replicate' );
 
+        
+            figure;
+            imshow(image_smoothed);
+  
+        
         % CALCOLA LBP RAGGIO I
         lbp_image = lbp( image_smoothed, i, 8, mapping, 'i' );
         

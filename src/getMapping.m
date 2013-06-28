@@ -13,7 +13,6 @@
 %       LBPHIST=lbp(I,2,16,MAPPING,'hist');
 %  Now LBPHIST contains a rotation-invariant uniform LBP
 %  histogram in a (16,2) neighbourhood.
-%
 
 function mapping = getmapping(samples,mappingtype)
 % Version 0.1.1
