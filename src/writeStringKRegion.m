@@ -27,7 +27,7 @@ function [ I1 ] = writeStringKRegion( I1, region_rows, region_cols, k, text )
     Text = sprintf(text);
     textColor = [ 0, 0, 0];
     % 'Color', textColor, 
-    H = vision.TextInserter( Text ,'Color', textColor, 'FontSize', 10, ...
+    H = vision.TextInserter( Text ,'Color', textColor, 'FontSize', 25, ...
         'Location', [floor((cMax+cMin)/2)-20 floor((rMax+rMin)/2) ]);
 
     I1 = step(H, I1);

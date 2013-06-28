@@ -56,11 +56,6 @@ function [ descriptor ] = getMLBPDescriptor( image, mapping, radii, num_region_r
         % apply gauss smoothing with sigma = LBP radius
         myfilter = fspecial( 'gaussian', [3 3], i );
         image_smoothed = imfilter( image, myfilter, 'replicate' );
-
-        
-            figure;
-            imshow(image_smoothed);
-  
         
         % CALCOLA LBP RAGGIO I
         lbp_image = lbp( image_smoothed, i, 8, mapping, 'i' );
@@ -69,7 +64,7 @@ function [ descriptor ] = getMLBPDescriptor( image, mapping, radii, num_region_r
         if (i ~= radii(end) )
             lbp_image = lbp_image( radii(end)-i+1:end-(radii(end)-i), radii(end)-i+1:end-(radii(end)-i) );
         end
-        
+                
         for k = 0:( num_region_rows*num_region_cols - 1 )
             [rMin, rMax, cMin, cMax] = gridBounds( size(lbp_image), num_region_rows, num_region_cols, k );
             M = lbp_image(rMin:rMax, cMin:cMax );
