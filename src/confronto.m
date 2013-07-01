@@ -10,7 +10,7 @@
 % (C) A.Rizzo, M. Bruni
 
 % get images
-image1 = imread('C1R3EBRZ.TIF');%C1R3EBRB,C1R3EBQY
+image1 = imread('C1R3EBRB.TIF');%C1R3EBRB,C1R3EBQY
 image2 = image1;
 
 % define region rows and columns
@@ -31,9 +31,8 @@ num_region_rows = 5;
 num_region_cols = 10;
 
 % Are the numbers that identify the correct regions
-correct_regions = 25:29
-
-correct_regions = correct_regions+1;
+correct_regions = [26:29, 36:39]
+% correct_regions = correct_regions+1
 
 % map the value to uniform implementation
 mapping = getmapping(8,'u2');
@@ -62,21 +61,23 @@ end
 figure;
 imshow( showGridMeasure( image2, num_region_rows, num_region_cols, 0:num_region_rows*num_region_cols-1 ) );
 
-correct_correlation = A( correct_regions, correct_regions );
-correct_mean = mean2( correct_correlation );
-correct_std = std2( correct_correlation );
+correct_correlation = A( correct_regions+1, correct_regions+1 );
+correct_mean = mean2( correct_correlation )
+correct_std = std2( correct_correlation )
 
 reject = zeros( num_region_rows*num_region_cols, 1 );
 accept = zeros( num_region_rows*num_region_cols, 1 );
 
 for k = 0:( num_region_rows*num_region_cols - 1 )
     if any( k ~= correct_regions )
-        test_mean = mean2( A(k+1,correct_regions) );
-        test_std = std2( A(k+1,correct_regions) );
+        test_mean = mean2( A(k+1,correct_regions+1) );
+        test_std = std2( A(k+1,correct_regions+1) );
         if ( test_mean <= ( correct_mean - 3*correct_std ) || ...
                 test_mean >= ( correct_mean + 3*correct_std ) )
             % reject
             reject(k+1) = k;
+            k
+            test_mean
         else
             % accept
             accept(k+1) = k;

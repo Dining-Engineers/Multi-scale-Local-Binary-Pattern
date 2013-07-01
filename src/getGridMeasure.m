@@ -9,7 +9,7 @@
 %
 % (C) A.Rizzo, M. Bruni
 
-function [ I1 ] = showGridMeasure( image, region_rows, region_cols, measure_vector )
+function [ I1 ] = getGridMeasure( image, region_rows, region_cols, measure_vector )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 

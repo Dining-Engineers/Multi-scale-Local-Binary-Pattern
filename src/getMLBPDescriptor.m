@@ -54,7 +54,7 @@ function [ descriptor ] = getMLBPDescriptor( image, mapping, radii, num_region_r
     for i = radii
         
         % apply gauss smoothing with sigma = LBP radius
-        myfilter = fspecial( 'gaussian', [3 3], i );
+        myfilter = fspecial( 'gaussian', [3 3], 2*i );
         image_smoothed = imfilter( image, myfilter, 'replicate' );
         
         % CALCOLA LBP RAGGIO I
