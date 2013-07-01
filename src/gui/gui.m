@@ -182,32 +182,13 @@ function showGridImage(handles, url)
     num_region_rows = str2double( get( handles.num_rows, 'String' ) );
     num_region_cols = str2double( get( handles.num_cols, 'String' ) );
 
-    a = showGridMeasure( url, num_region_rows, num_region_cols, ...
-                            0:num_region_rows*num_region_cols-1);
-    imshow(a);
-%     image(a)
-%     axis image
+    [ image, r_min, r_max, c_min, c_max ] = getGridMeasure( url, num_region_rows, num_region_cols);
+    imshow(image);
     
-    %# grid domains
-%     xg = 0:50:200;
-%     yg = 0:50:200;
-%     %# label coordinates
-%     [xlbl, ylbl] = meshgrid(xg+25, yg+25);
-%     %# create cell arrays of number labels
-%     lbl = strtrim(cellstr(num2str((1:numel(xlbl))')));
-%     
-%     text(xlbl(:), ylbl(:), lbl(:),'color','w',...
-%         'HorizontalAlignment','center','VerticalAlignment','middle');
-
-    
+    for k=0:(num_region_rows*num_region_cols-1)
+        text(floor((c_max(k+1)+c_min(k+1))/2), floor((r_max(k+1)+r_min(k+1))/2), num2str(k))
+    end
     axes(handles.axes1);
-    
-%     imshow( showGridMeasure( url, num_region_rows, num_region_cols, ...
-%                             0:num_region_rows*num_region_cols-1) );
-
-                        
-                      
-
 
 
 function correct_samples_Callback(hObject, eventdata, handles)
@@ -254,7 +235,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 
 
 
-function computeRejectedRegions(handles, image, correct_regions, radii, num_region_rows, num_region_cols )
+function computeRejectedRegions(handles, image, training_regions, radii, num_region_rows, num_region_cols )
 
     % map the value to uniform implementation
     mapping = getmapping(8,'u2');
@@ -269,32 +250,86 @@ function computeRejectedRegions(handles, image, correct_regions, radii, num_regi
        end
     end
 
-    correct_correlation = A( correct_regions+1, correct_regions+1 );
-    correct_mean = mean2( correct_correlation )
-    correct_std = std2( correct_correlation )
+    training_correlation = A( training_regions+1, training_regions+1 );
+    training_mean = mean2( training_correlation );
+    training_std = std2( training_correlation );
 
     reject = zeros( num_region_rows*num_region_cols, 1 );
     accept = zeros( num_region_rows*num_region_cols, 1 );
+    
+    test_statistic_measures = zeros( num_region_rows*num_region_cols - length(training_regions), 3 );
 
+    not_training_counter = 1;
     for k = 0:( num_region_rows*num_region_cols-1 )
-        if any( k ~= correct_regions )
-            test_mean = mean2( A( k+1, correct_regions+1 ) );
-            % test_std = std2( A(k+1,correct_regions+1) );
-            if ( test_mean <= ( correct_mean - 3*correct_std ) || ...
-                    test_mean >= ( correct_mean + 3*correct_std ) )
+        if ~(any( k == training_regions ))
+            test_mean = mean2( A( k+1, training_regions+1 ) );
+            test_std = std2( A(k+1,training_regions+1) );
+            
+            test_statistic_measures(not_training_counter, 1) = test_mean;
+            test_statistic_measures(not_training_counter, 2) = test_std;
+            test_statistic_measures(not_training_counter, 3) = k;
+            
+            if ( test_mean <= ( training_mean - 3*training_std ) || ...
+                    test_mean >= ( training_mean + 3*training_std ) )
                 % reject
                 reject(k+1) = k;
             else
                 % accept
                 accept(k+1) = k;
             end
+            not_training_counter = not_training_counter + 1;
         end
     end
-
+    
     reject = find( reject(:) ~= 0 ) - 1;
     reject = reject'
     
-    axes(handles.axes1);
-    out = writeResults( image, num_region_rows, num_region_cols, correct_regions, reject );
+    test_statistic_measures = sortrows( test_statistic_measures,1 );
+        
+    [ b, r_min, r_max, c_min, c_max ] = getGridMeasure( image, num_region_rows, num_region_cols);
+    out = writeResults( image, num_region_rows, num_region_cols, training_regions, reject );
 
     imshow(out);
+    
+    for k=0:(num_region_rows*num_region_cols-1)
+        text(floor((c_max(k+1)+c_min(k+1))/2), floor((r_max(k+1)+r_min(k+1))/2), num2str(k));
+    end
+    axes(handles.axes1);
+    plotGaussians(training_mean, training_std, test_statistic_measures,  1, 5 );
+    plotGaussians(training_mean, training_std, test_statistic_measures,  length(reject)+1, 5 );
+
+    
+    
+    % from = 1 prendo num, rejected incluse
+    % from = x ne prendo num a partire da x
+    function plotGaussians(training_mean, training_std, test_statistic_measures,  from, num )
+    
+        figure;
+
+        x = test_statistic_measures(1,1) - 4*test_statistic_measures(1,2):0.0001:training_mean + 3*training_std;
+        y_training = gaussmf( x,[ training_std training_mean] );
+
+        % number of worst regions
+        y_gaussian_worst_regions = zeros( num,  length(x));
+
+        hold on;
+        cc=hsv(num+1);
+        p = zeros(length(num+1),1);
+
+        l = strcat({'region '},int2str((       test_statistic_measures(from:from+num+1,3)       ))).';
+        l(num+1) = {'training'};
+
+        counter = 1;
+        for k = from:from+num
+            y_gaussian_worst_regions( counter, :) = gaussmf( x, [ test_statistic_measures(k,2) test_statistic_measures(k,1) ] );
+            p(counter) = plot( x, y_gaussian_worst_regions(counter, :), 'color', cc(counter,:));
+            counter = counter+1;
+        end
+
+        p(num+1) = plot( x, y_training, 'color', cc(num+1,:));
+        plot( ( training_mean - 3*training_std ) , 0:0.001:1 );
+        plot( ( training_mean + 3*training_std ) , 0:0.001:1 );    
+
+        title('Worst regions gaussian distribution');
+        legend(p, l,'Location','BestOutside');%,'Orientation','horizontal');
+        xlabel(strcat('gaussmf, P=[', num2str(training_mean), ', ', num2str(training_std), ']') );

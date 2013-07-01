@@ -10,7 +10,7 @@
 % (C) A.Rizzo, M. Bruni
 
 
-function [ I1 ] = writeStringKRegion( I1, region_rows, region_cols, k, text )
+function [ I1, rMin, rMax, cMin, cMax ] = writeStringKRegion( I1, region_rows, region_cols, k )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -25,13 +25,13 @@ function [ I1 ] = writeStringKRegion( I1, region_rows, region_cols, k, text )
     I1(:, cMin ) = grid_color;
     I1(:, cMax) = grid_color;
 
-    Text = sprintf(text);
-    textColor = [ 0, 0, 0];
-    % 'Color', textColor, 
-    H = vision.TextInserter( Text ,'Color', textColor, 'FontSize', 25, ...
-        'Location', [floor((cMax+cMin)/2)-20 floor((rMax+rMin)/2) ]);
-
-    I1 = step(H, I1);
+%     Text = sprintf(text);
+%     textColor = [ 0, 0, 0];
+%     % 'Color', textColor, 
+%     H = vision.TextInserter( Text ,'Color', textColor, 'FontSize', 25, ...
+%         'Location', [floor((cMax+cMin)/2)-20 floor((rMax+rMin)/2) ]);
+% 
+%     I1 = step(H, I1);
 
 
 

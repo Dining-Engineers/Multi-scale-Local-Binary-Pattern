@@ -9,20 +9,21 @@
 %
 % (C) A.Rizzo, M. Bruni
 
-function [ I1 ] = getGridMeasure( image, region_rows, region_cols, measure_vector )
+function [ I1, r_min, r_max, c_min, c_max ] = getGridMeasure( image, region_rows, region_cols )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
+    r_min = zeros(1,region_rows*region_cols);
+    r_max = zeros(1,region_rows*region_cols);
+    c_min = zeros(1,region_rows*region_cols);
+    c_max = zeros(1,region_rows*region_cols);
+    
     I1 = image;
+    
+    for k=0:(region_rows*region_cols-1)
 
-    if( length(measure_vector) == 1 )     
-           I1 = writeStringKRegion( I1, region_rows, region_cols, measure_vector, num2str(measure_vector) );
-    else
+        [ I1, r_min(k+1), r_max(k+1), c_min(k+1), c_max(k+1) ] = writeStringKRegion( I1, region_rows, region_cols, k);
 
-        for k=0:(region_rows*region_cols-1)
-
-           I1 = writeStringKRegion( I1, region_rows, region_cols, k, num2str(measure_vector(k+1)) );
-
-        end
     end
+
 end

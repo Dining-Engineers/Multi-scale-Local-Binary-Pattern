@@ -46,13 +46,13 @@ function [ rgbImage ] = writeResults( I1, region_rows, region_cols, correct_regi
         rgbImage(rMin:rMax, cMax , 2) = grid_color(2);
         rgbImage(rMin:rMax, cMax , 3) = grid_color(3);
 
-        Text = num2str(k);
-        textColor = [ 0, 0, 0];
+        % Text = num2str(k);
+        % textColor = [ 0, 0, 0];
         % 'Color', textColor, 
-        H = vision.TextInserter( Text ,'Color', textColor, 'FontSize', 25, ...
-            'Location', [floor((cMax+cMin)/2)-20 floor((rMax+rMin)/2) ]);
+        % H = vision.TextInserter( Text ,'Color', textColor, 'FontSize', 25, ...
+%            'Location', [floor((cMax+cMin)/2)-20 floor((rMax+rMin)/2) ]);
 
-        rgbImage = step(H, rgbImage);
+        % rgbImage = step(H, rgbImage);
     end
     
 
