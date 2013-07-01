@@ -22,7 +22,7 @@ function varargout = gui(varargin)
 
 % Edit the above text to modify the response to help gui
 
-% Last Modified by GUIDE v2.5 01-Jul-2013 13:52:18
+% Last Modified by GUIDE v2.5 01-Jul-2013 21:43:33
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -179,12 +179,15 @@ function image_path_KeyPressFcn(hObject, eventdata, handles)
 
 function showGridImage(handles, url)
     
+    % get the number of rows and columns
     num_region_rows = str2double( get( handles.num_rows, 'String' ) );
     num_region_cols = str2double( get( handles.num_cols, 'String' ) );
 
+    % get the coordinates of (num_region_rows*num_region_cols) regions
     [ image, r_min, r_max, c_min, c_max ] = getGridMeasure( url, num_region_rows, num_region_cols);
     imshow(image);
     
+    % prints the number for each region
     for k=0:(num_region_rows*num_region_cols-1)
         text(floor((c_max(k+1)+c_min(k+1))/2), floor((r_max(k+1)+r_min(k+1))/2), num2str(k))
     end
@@ -219,19 +222,20 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-    correct_regions = str2num(get( handles.correct_samples, 'String' ))
-    %correct_regions = correct_regions+1;
+    training_regions = str2num(get( handles.correct_samples, 'String' ))
+    
     num_region_rows = str2double( get( handles.num_rows, 'String' ) );
     num_region_cols = str2double( get( handles.num_cols, 'String' ) );
     
-    % number of lbp/histogram 
-    radii = [ 3 6 9 12 ];
+    % get the number of lbp/histogram 
+    %radii = [ 3 6 9 12 ];
+    radii = str2num( get( handles.radii, 'String' ) );
     
     fullImageFileName = get( handles.image_path ,'String' );
     
     image =  imread(fullImageFileName);
     
-    computeRejectedRegions(handles, image, correct_regions, radii, num_region_rows, num_region_cols )
+    computeRejectedRegions( handles, image, training_regions, radii, num_region_rows, num_region_cols )
 
 
 
@@ -241,14 +245,23 @@ function computeRejectedRegions(handles, image, training_regions, radii, num_reg
     mapping = getmapping(8,'u2');
 
     descriptor = getMLBPDescriptor( image, mapping, radii, num_region_rows, num_region_cols );
+    
+    A = zeros( size(descriptor, 1) );
 
-    A = zeros( size(descriptor) );
+%     for i = 1:size(descriptor, 1)
+%        for j = 1:size(descriptor, 1)
+%            A(i,j) = getNormalizedCorrelation( descriptor(i, : ), descriptor( j, : ) );
+%        end
+%     end
 
+    % A is a symmetric matrix
     for i = 1:size(descriptor, 1)
-       for j = 1:size(descriptor, 1)
-           A(i,j) = getNormalizedCorrelation( descriptor(i, : ), descriptor( j, : ) );
-       end
+        for j = i:size(descriptor, 1)
+            A(i,j) = getNormalizedCorrelation( descriptor(i, : ), descriptor( j, : ) );
+        end
     end
+    
+    A = A - tril(A) + A';
 
     training_correlation = A( training_regions+1, training_regions+1 );
     training_mean = mean2( training_correlation );
@@ -257,6 +270,15 @@ function computeRejectedRegions(handles, image, training_regions, radii, num_reg
     reject = zeros( num_region_rows*num_region_cols, 1 );
     accept = zeros( num_region_rows*num_region_cols, 1 );
     
+    % test_statistic_measures is a nx3 matrix
+    %
+    %   _ _ _ _ _ _ _ _ _ _ 
+    %  |_mean_|_std_|_index_|
+    %  |_ _ _ |_ _ _|_ _ _ _|  
+    %  |_ _ _ |_ _ _|_ _ _ _|
+    %  |_ _ _ |_ _ _|_ _ _ _|
+    %  |      |     |       |
+    %
     test_statistic_measures = zeros( num_region_rows*num_region_cols - length(training_regions), 3 );
 
     not_training_counter = 1;
@@ -292,17 +314,18 @@ function computeRejectedRegions(handles, image, training_regions, radii, num_reg
     imshow(out);
     
     for k=0:(num_region_rows*num_region_cols-1)
-        text(floor((c_max(k+1)+c_min(k+1))/2), floor((r_max(k+1)+r_min(k+1))/2), num2str(k));
+        text( floor((c_max(k+1)+c_min(k+1))/2), floor((r_max(k+1)+r_min(k+1))/2), num2str(k) );
     end
+    
     axes(handles.axes1);
-    plotGaussians(training_mean, training_std, test_statistic_measures,  1, 5 );
-    plotGaussians(training_mean, training_std, test_statistic_measures,  length(reject)+1, 5 );
+    plotGaussians(training_mean, training_std, test_statistic_measures,  1, 5, 'Worst regions gaussian distribution' );
+    plotGaussians(training_mean, training_std, test_statistic_measures,  length(reject)+1, 5, 'Gaussian distribution of the worst correct regions'  );
 
     
     
     % from = 1 prendo num, rejected incluse
     % from = x ne prendo num a partire da x
-    function plotGaussians(training_mean, training_std, test_statistic_measures,  from, num )
+    function plotGaussians( training_mean, training_std, test_statistic_measures,  from, num, Title )
     
         figure;
 
@@ -328,8 +351,31 @@ function computeRejectedRegions(handles, image, training_regions, radii, num_reg
 
         p(num+1) = plot( x, y_training, 'color', cc(num+1,:));
         plot( ( training_mean - 3*training_std ) , 0:0.001:1 );
-        plot( ( training_mean + 3*training_std ) , 0:0.001:1 );    
+        plot( ( training_mean + 3*training_std ) , 0:0.001:1 );
+        
+        title( Title );
+        legend( p, l,'Location','BestOutside' ); %,'Orientation','horizontal');
+        xlabel( strcat('gaussmf, P=[', num2str(training_mean), ', ', num2str(training_std), ']') );
 
-        title('Worst regions gaussian distribution');
-        legend(p, l,'Location','BestOutside');%,'Orientation','horizontal');
-        xlabel(strcat('gaussmf, P=[', num2str(training_mean), ', ', num2str(training_std), ']') );
+
+
+function radii_Callback(hObject, eventdata, handles)
+% hObject    handle to radii (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of radii as text
+%        str2double(get(hObject,'String')) returns contents of radii as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function radii_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to radii (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
