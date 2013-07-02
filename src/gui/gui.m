@@ -289,8 +289,10 @@ function computeRejectedRegions(handles, image, training_regions, radii, num_reg
         end
     end
     
+    A = A - tril(A) + A';
+    
     training_correlation = A(  training_regions+1, training_regions+1 );
-    training_correlation = training_correlation(triu(true(size(training_correlation)), 1));
+%     training_correlation = training_correlation(triu(true(size(training_correlation)), 1));
 
     training_mean = mean2( training_correlation );
     training_std = std2( training_correlation );
@@ -314,7 +316,7 @@ function computeRejectedRegions(handles, image, training_regions, radii, num_reg
     for k = 0:( num_region_rows*num_region_cols-1 )
         if ~(any( k == training_regions ) )
             
-            test_values = A( training_regions+1, k+1 );
+            test_values = A(  k+1, training_regions+1 );
             test_mean = mean2( test_values );
             test_std = std2( test_values );
             
