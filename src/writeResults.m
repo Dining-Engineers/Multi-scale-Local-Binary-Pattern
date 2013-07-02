@@ -15,7 +15,6 @@ function [ rgbImage ] = writeResults( I1, region_rows, region_cols, correct_regi
 
     rgbImage = repmat(I1,[1 1 3]);
     rgbImage = cat(3,I1,I1,I1);
-    size(rgbImage)
 
     for k=0:(region_rows*region_cols-1)
 

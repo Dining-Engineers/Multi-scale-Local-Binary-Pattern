@@ -18,7 +18,7 @@
 % (C) A.Rizzo, M. Bruni
 
 
-function [ descriptor ] = getMLBPDescriptor( image, mapping, radii, num_region_rows, num_region_cols )
+function [ descriptor ] = getMLBPDescriptor( image, mapping, radii, num_region_rows, num_region_cols, kernel_size, sigma_coefficient )
 % Version 0.1
 % Authors: Andrea Rizzo and Matteo Bruni
 
@@ -54,7 +54,7 @@ function [ descriptor ] = getMLBPDescriptor( image, mapping, radii, num_region_r
     for i = radii
         
         % apply gauss smoothing with sigma = LBP radius
-        myfilter = fspecial( 'gaussian', [3 3], 2*i );
+        myfilter = fspecial( 'gaussian', kernel_size, sigma_coefficient*i );
         image_smoothed = imfilter( image, myfilter, 'replicate' );
         
         % CALCOLA LBP RAGGIO I
