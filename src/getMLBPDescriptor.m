@@ -18,7 +18,7 @@
 % (C) A.Rizzo, M. Bruni
 
 
-function [ descriptor ] = getMLBPDescriptor( image, mapping, radii, num_region_rows, num_region_cols, kernel_size, sigma_coefficient )
+function [ descriptor ] = getMLBPDescriptor( image, mapping, radii, num_region_rows, num_region_cols, sigma_coefficient )
 % Version 0.1
 % Authors: Andrea Rizzo and Matteo Bruni
 
@@ -51,14 +51,20 @@ function [ descriptor ] = getMLBPDescriptor( image, mapping, radii, num_region_r
     region_ysize = floor(ysize/region_rows);
     %}
  
+    % compute kernel size
+    % 6*sigma - 1 = kernel_size
+    %
+        
+    kernel_size = ceil( abs( 6*sigma_coefficient - 1 ) );
+    
     for i = radii
         
         % apply gauss smoothing with sigma = LBP radius
-        myfilter = fspecial( 'gaussian', kernel_size, sigma_coefficient*i );
-        image_smoothed = imfilter( image, myfilter, 'replicate' );
+        myfilter = fspecial( 'gaussian', kernel_size, sigma_coefficient );
+        image = imfilter( image, myfilter, 'replicate' );
         
         % CALCOLA LBP RAGGIO I
-        lbp_image = lbp( image_smoothed, i, 8, mapping, 'i' );
+        lbp_image = lbp( image, i, 8, mapping, 'i' );
         
         % RITAGLIA IMMAGINE A DIMENSIONE MINORE (CROP)
         if (i ~= radii(end) )

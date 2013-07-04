@@ -256,14 +256,13 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     
     image =  imread(fullImageFileName);
     
-    kernel_size = str2num( get( handles.kernel_size, 'String' ) );
     sigma_coefficient = str2num( get( handles.sigma_coefficient, 'String' ) );
     
-    computeRejectedRegions( handles, image, training_regions, radii, num_region_rows, num_region_cols, kernel_size, sigma_coefficient );
+    computeRejectedRegions( handles, image, training_regions, radii, num_region_rows, num_region_cols, sigma_coefficient );
 
 
 
-function computeRejectedRegions(handles, image, training_regions, radii, num_region_rows, num_region_cols, kernel_size, sigma_coefficient )
+function computeRejectedRegions(handles, image, training_regions, radii, num_region_rows, num_region_cols, sigma_coefficient )
 
     global training_mean;
     global training_std;
@@ -272,7 +271,7 @@ function computeRejectedRegions(handles, image, training_regions, radii, num_reg
     % map the value to uniform implementation
     mapping = getmapping(8,'u2');
 
-    descriptor = getMLBPDescriptor( image, mapping, radii, num_region_rows, num_region_cols, kernel_size, sigma_coefficient );
+    descriptor = getMLBPDescriptor( image, mapping, radii, num_region_rows, num_region_cols, sigma_coefficient );
     
     A = zeros( size(descriptor, 1) );
 
