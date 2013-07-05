@@ -9,6 +9,6 @@ Authors:
 
 You are free to use, change, or redistribute this code in any way you
 want for non-commercial purposes. However, it is appreciated if you 
-maintain the name of the original author.
+maintain the name of the original authors.
 
 (C) A.Rizzo, M. Bruni
