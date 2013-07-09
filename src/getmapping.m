@@ -82,6 +82,15 @@ if strcmp(mappingtype,'riu2') %Uniform & Rotation invariant
   end
 end
 
+
+if strcmp(mappingtype,'complete') %complete
+  newMax = 2^samples-1;
+  for i = 0:2^samples - 1
+      table(i+1) = i;
+  end
+  
+end
+
 mapping.table=table;
 mapping.samples=samples;
 mapping.num=newMax;

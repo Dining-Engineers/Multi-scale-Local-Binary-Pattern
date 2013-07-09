@@ -1,0 +1,88 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{subfig}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{amssymb}
+\usepackage[colorlinks=true, linkcolor=blue]{hyperref}
+\usepackage{setspace}
+%\usepackage{numprint}
+%\usepackage[justification=centering]{subcaption}
+\usetikzlibrary{arrows,shapes,automata,backgrounds,petri}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+
+\doublespacing
+
+\definecolor{light-gray}{gray}{0.85}
+\definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
+
+\begin{document}
+
+%\maketitle    % Creazione del Frontespizio
+
+\begin{titlepage}
+\thispagestyle{empty}
+\topmargin=1cm
+\large
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.075]{img/Stemma.jpg}
+\end{figure}
+
+\begin{center}
+
+UNIVERSITÀ DEGLI STUDI DI FIRENZE
+\vspace{0.5cm}
+
+Laurea Magistrale in Ingegneria Informatica
+\\
+\normalsize
+Corso di Analisi di Immagini e Video
+\vspace{4cm}
+
+\begin{huge}
+Implementazione \\
+Multiscale Local Binary Pattern
+\end{huge}
+
+\vspace{0.5cm}
+
+A. Rizzo, M. Bruni
+
+\vspace{5cm}
+\rule{5cm}{.4pt}
+\\
+Anno accademico 2012/2013
+\end{center}
+\end{titlepage}
+
+%%%%%%%%%%%%%% 
+
+%\frontmatter % numera le pagine con numeri romani
+
+\tableofcontents % Indice
+
+\clearpage
+
+\include{Introduzione}
+\include{MLBP}
+\include{Implementazione}
+\include{Conclusioni}
+
+\pagebreak
+
+\appendix
+\listoffigures    % Indice Figure
+\listoftables
+
+\addcontentsline{toc}{section}{Bibliografia}
+\bibliographystyle{IEEEtran}
+\bibliography{bibliography}
+
+\end{document}
+

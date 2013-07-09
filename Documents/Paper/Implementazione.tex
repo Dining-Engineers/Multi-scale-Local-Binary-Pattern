@@ -1,0 +1,79 @@
+\section{Implementazione}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/gui}
+\caption{ GUI }
+\label{fig:GUI}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/gui_pre_lbp}
+\caption{ GUI pre LBP }
+\label{fig:GUIpreLBP}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/gui_post_lbp}
+\caption{ GUI post LBP }
+\label{fig:GUIpostLBP}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/worst_graph}
+\caption{ Caso peggiore }
+\label{fig:worstGraph}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/worst_best_graph}
+\caption{ I peggiori tra i migliori }
+\label{fig:worstBestGraph}
+\end{center}
+\end{figure}
+
+
+
+\subsection{Segmentazione}
+
+\subsection{Misura di similarità}
+
+Per misurare la similarità tra i descrittori di due regioni $I$ e $J$, possono essere utilizzati vari criteri. Abbiamo implementato le seguenti misure di similarità $Sim(I, J)$:
+
+\begin{itemize}
+
+\item Chi-square criterion:
+\begin{equation}
+Sim(I, J) = -  \sum_{i} \frac{ (f_{I}(i) - f_{J}(i) )^2}{f_{I}(i) + f_{J}(i)}
+\end{equation}
+
+\item Histogram intersection:
+\begin{equation}
+Sim(I, J) = \sum_{i} \mbox{min}(f_{I}(i),f_{J}(i))
+\end{equation}
+
+\item Log-likelihood ratio (Kullack-Leibler 
+divergence):
+\begin{equation}
+Sim(I, J) = - \sum_{i} f_{I}(i)log(f_{J}(i)
+\end{equation}
+
+\item Normalize Correlation:
+\begin{equation}
+Sim(I, J) = \frac{f_{I}f_{J}'}{||f_{I}|| ||f_{J}||}
+\end{equation}
+
+\item Normalize Cross-correlation:
+\begin{equation}
+Sim(I, J) = \frac{\sigma_{f_{I}f_{J}}}{\sigma_{f_{I}}\sigma_{f_{J}}}
+\end{equation}
+
+\end{itemize}

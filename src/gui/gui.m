@@ -254,7 +254,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     
     fullImageFileName = get( handles.image_path ,'String' );
     
-    image =  imread(fullImageFileName);
+    image =  imread(fullImageFileName); %rgb2gray(imread(fullImageFileName));
     
     sigma_coefficient = str2num( get( handles.sigma_coefficient, 'String' ) );
     
@@ -270,30 +270,31 @@ function computeRejectedRegions(handles, image, training_regions, radii, num_reg
     global reject;
     % map the value to uniform implementation
     mapping = getmapping(8,'u2');
+%     mapping = getmapping(8,'complete');
 
     descriptor = getMLBPDescriptor( image, mapping, radii, num_region_rows, num_region_cols, sigma_coefficient );
     
     A = zeros( size(descriptor, 1) );
 
-%     for i = 1:size(descriptor, 1)
-%        for j = 1:size(descriptor, 1)
-%            A(i,j) = getNormalizedCorrelation( descriptor(i, : ), descriptor( j, : ) );
-%        end
-%     end
-
     % A is a symmetric matrix
     for i = 1:size(descriptor, 1)
         for j = i:size(descriptor, 1)
-            A(i,j) = getNormalizedCorrelation( descriptor(i, : ), descriptor( j, : ) );
+%             A(i,j) = getNormalizedCorrelation( descriptor(i, : ), descriptor( j, : ) );
+            %A(i,j) = getHistogramIntersection( descriptor(i, : ), descriptor( j, : ) );
+            %A(i,j) = getChiSquareCriterion( descriptor(i, : ), descriptor( j, : ) );
+            %A(i,j) = getLogLikelihoodRatio( descriptor(i, : ), descriptor( j, : ) );
+            A(i,j) = getCrossNormalizedCorrelation( descriptor(i, : ), descriptor( j, : ) );
         end
     end
     
     A = A - tril(A) + A';
     
-    training_correlation = A(  training_regions+1, training_regions+1 );
-%     training_correlation = training_correlation(triu(true(size(training_correlation)), 1));
+    training_correlation = A( training_regions+1, training_regions+1 );
+    training_correlation =  training_correlation(triu(true(size(training_correlation)), 1));
 
-    training_mean = mean2( training_correlation );
+    %training_correlation(find(~tril(ones(size(training_correlation)))));
+
+    training_mean = mean2( training_correlation )
     training_std = std2( training_correlation );
 
     reject = zeros( num_region_rows*num_region_cols, 1 );
@@ -316,6 +317,10 @@ function computeRejectedRegions(handles, image, training_regions, radii, num_reg
         if ~(any( k == training_regions ) )
             
             test_values = A(  k+1, training_regions+1 );
+            
+            test_values =  test_values(triu(true(size(test_values)), 1));
+
+                
             test_mean = mean2( test_values );
             test_std = std2( test_values );
             
