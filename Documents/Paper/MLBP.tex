@@ -1,6 +1,9 @@
-\section{Local Binary Pattern}
+\section{Multi-scale Local Binary Pattern}
+In questo capitolo verranno presentati alcuni concetti teorici e gli stumenti utilizzati per lo sviluppo dall'applicazione. Il primo paragrafo introdurrà il descrittore di feature \acf{LBP}. Verrà analizzata un'estensione del \acs{LBP}, ovvero Uniform \acs{LBP}, che viene utilizzato per ridurre la lunghezza del vettore di feature. Analizzeremo il \acf{MLBP} e per concludere parleremo del filtro di smoothing gaussiano utilizzato per il preprocessing dell'immagine.
 
-Local binary patterns (LBP) is a type of feature used for classification in computer vision. LBP is the particular case of the Texture Spectrum model proposed in 1990.[1][2] LBP was first described in 1994.[3][4] It has since been found to be a powerful feature for texture classification; it has further been determined that when LBP is combined with the Histogram of oriented gradients (HOG) classifier, it improves the detection performance considerably on some datasets.[5]
+\subsection{Local Binary Pattern}
+
+\acf{LBP} is a type of feature used for classification in computer vision. LBP is the particular case of the Texture Spectrum model proposed in 1990.[1][2] LBP was first described in 1994.[3][4] It has since been found to be a powerful feature for texture classification; it has further been determined that when LBP is combined with the Histogram of oriented gradients (HOG) classifier, it improves the detection performance considerably on some datasets.[5]
 
 Local Binary Pattern (LBP) is a simple yet very efficient texture operator which labels the pixels of an image by thresholding the neighborhood of each pixel and considers the result as a binary number. Due to its discriminative power and computational simplicity, LBP texture operator has become a popular approach in various applications. It can be seen as a unifying approach to the traditionally divergent statistical and structural models of texture analysis. Perhaps the most important property of the LBP operator in real-world applications is its robustness to monotonic gray-scale changes caused, for example, by illumination variations. Another important property is its computational simplicity, which makes it possible to analyze images in challenging real-time settings. 
 
@@ -93,15 +96,10 @@ B(v) = 	\begin{cases} 1, & \mbox{v = true} \\ 0, & \mbox{altrimenti} \end{cases}
 
 \subsection{Multiscale Local Binary Pattern}
 
-
-
-
-
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=.95\textwidth]{img/raggio_LBP}
-\caption{ Multiscale LBP }
-\label{fig:MLBP}
+\caption{ Raggio LBP }
 \end{center}
 \end{figure}
 
@@ -122,4 +120,35 @@ B(v) = 	\begin{cases} 1, & \mbox{v = true} \\ 0, & \mbox{altrimenti} \end{cases}
 f_{j} = [h_{P, 1, j}, h_{P, 2, j}, \cdots, h_{P, R, j}]
 \end{equation}
 
-\subsection{Smoothing}
+\subsection{Filtro di smoothing gaussiano}
+I filtri di \emph{smoothing} vengono utilizzati principalmente per ridurre il rumore presente nell'immagine. Sono anche detti \emph{filtri di media}. Infatti facendo scorrere lungo l'immagine la maschera del filtro, detta anche \emph{kernel mask}, il valore di ogni pixel viene sostituito con la media pesata dei livelli di grigio dei pixel interni alla regione della maschera. Il processo di smoothing permette di ridurre i dettagli meno significativi dell'immagine e mettere in risalto le caratteristiche strutturali della stesssa.
+Un effetto indesiderato dello smoothing è quello di produrre un'immagine sfocata, soprattutto se applicato iterativamente.
+La figura \ref{fig:kernelMask} mostra un filtro di smoothing generico 3x3. La mascherà del filtro verrà moltiplicata per un coefficiente di normalizzazione in modo tale che la somma degli elementi della mascherà faccia uno. I coefficienti della maschera vengono scendi secondo il seguente principio: il peso associato al pixel centrale assume un valore superiore rispetto agli altri. I pesi associati agli altri pixel assumono valori decrescenti all'aumentare della distanza dal pixel centrale. In altre parole si vuole fare in modo che il pixel centrale abbia una maggiore importanza nel calcolo della media. Viceversa i pixel più lontani da quello centrale peseranno di meno nel calcolo della media. Questo permette di ridurre l'effetto indesiderato del processo di smoothing.
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=.3\textwidth]{img/kernel_mask}
+\caption{ Esempio di una kernel mask di dimensioni 3x3, dove $\omega_{i,j}$ reppresenta il peso applicato al valore del livello di grigio del corrispettivo pixel nell'immagine}
+\label{fig:kernelMask}
+\end{center}
+\end{figure}
+
+Dunque, per ridurre l'effetto indesiderato dello smoothing si è scelto di utilizzare il filtro di smoothing gaussiano. I coefficienti della maschera sono calcolati utilizzando la \emph{2D Gaussian Smoothing Operator} $G(x,y)$, cui formula è riportata qui di seguito:
+
+\begin{equation}
+G(x, y) = e^{- \frac{(x^2 + y^2)}{2\sigma^2}}
+\end{equation}
+
+La dimensione $n$ della kernel mask è legata al valore di $\sigma$ dalla seguente formula:
+
+\begin{equation}
+3\sigma - 1 = n
+\end{equation}
+
+%\begin{center}
+%\begin{tabular}[ht]{|c|c|c|}\hline
+%	$\omega_{1,1}$ & $\omega_{1,2}$ & $\omega_{1,3}$ \\ \hline
+%	$\omega_{2,1}$ & $\omega_{2,2}$ & $\omega_{2,3}$ \\ \hline
+%	$\omega_{3,1}$ & $\omega_{3,2}$ & $\omega_{3,3}$ \\ \hline
+%\end{tabular}
+%\end{center}
