@@ -1,129 +1,172 @@
 \section{Multi-scale Local Binary Pattern}
-In questo capitolo verranno presentati alcuni concetti teorici e gli stumenti utilizzati per lo sviluppo dall'applicazione. Il primo paragrafo introdurrà il descrittore di feature \acf{LBP}. Verrà analizzata un'estensione del \acs{LBP}, ovvero Uniform \acs{LBP}, che viene utilizzato per ridurre la lunghezza del vettore di feature. Analizzeremo il \acf{MLBP} e per concludere parleremo del filtro di smoothing gaussiano utilizzato per il preprocessing dell'immagine.
+In questo capitolo verranno presentati alcuni concetti teorici e gli stumenti utilizzati per lo sviluppo dell'applicazione. Il primo paragrafo introdurrà il descrittore di feature \acf{LBP}. Verrà analizzata una sua variante, ovvero Uniform \acs{LBP}, che viene utilizzato per ridurre la lunghezza del vettore di feature. Analizzeremo infine la sua estensione \acf{MLBP}.
 
 \subsection{Local Binary Pattern}
 
-\acf{LBP} is a type of feature used for classification in computer vision. LBP is the particular case of the Texture Spectrum model proposed in 1990.[1][2] LBP was first described in 1994.[3][4] It has since been found to be a powerful feature for texture classification; it has further been determined that when LBP is combined with the Histogram of oriented gradients (HOG) classifier, it improves the detection performance considerably on some datasets.[5]
+\acf{LBP} è un efficiente texture operator, introdotto per la prima volta nel 1994 \cite{LBPfirst}. Le feature estratte con questo metodo vengono utilizzate per la classificazione di immagini in ambito della computer vision.
+\acs{LBP} associa ai pixel dell'immagine un'etichetta, determinata tramite un'operazione di confronto tra il pixel in esame ed un certo numero di pixel nelle sue vicinanze, \emph{neighborhood}.
+Tra le caratteristiche principali di \acs{LBP} troviamo:
 
-Local Binary Pattern (LBP) is a simple yet very efficient texture operator which labels the pixels of an image by thresholding the neighborhood of each pixel and considers the result as a binary number. Due to its discriminative power and computational simplicity, LBP texture operator has become a popular approach in various applications. It can be seen as a unifying approach to the traditionally divergent statistical and structural models of texture analysis. Perhaps the most important property of the LBP operator in real-world applications is its robustness to monotonic gray-scale changes caused, for example, by illumination variations. Another important property is its computational simplicity, which makes it possible to analyze images in challenging real-time settings. 
+\begin{itemize}
+	\item è robusto alla variazione uniforme dell'illuminazione dell'immagine;
+	\item è robusto al rumore;
+	\item non è invariante alle rotazioni dell'immagine;
+	\item non è invariante alla scala.
+\end{itemize}
 
+Un altra importante proprietà è infine la sua semplicità computazionale che lo rende ideale per l'analisi delle immagine in \acf{RT}.
 
-----
+\subsubsection{Descrizione}
 
-The basic idea for developing the LBP operator was that two-dimensional surface textures can be described by two complementary measures: local spatial patterns and gray scale contrast. The original LBP operator (Ojala et al. 1996) forms labels for the image pixels by thresholding the 3 x 3 neighborhood of each pixel with the center value and considering the result as a binary number. The histogram of these 28 = 256 different labels can then be used as a texture descriptor. This operator used jointly with a simple local contrast measure provided very good performance in unsupervised texture segmentation (Ojala and Pietikäinen 1999). After this, many related approaches have been developed for texture and color texture segmentation.
+L'idea alla base dell'operatore \acf{LBP} è che le texture bidimensionali possono essere descritte attraverso pattern locali.
+L'implementazione base dell'operatore \acs{LBP} etichetta i pixel dell'immagine attraverso un'operazione di sogliatura dei pixel contenuti in una maschera 3 x 3.
 
-The LBP operator was extended to use neighborhoods of different sizes (Ojala et al. 2002). Using a circular neighborhood and bilinearly interpolating values at non-integer pixel coordinates allow any radius and number of pixels in the neighborhood. The gray scale variance of the local neighborhood can be used as the complementary contrast measure. In the following, the notation (P,R) will be used for pixel neighborhoods which means P sampling points on a circle of radius of R. See Fig. 2 for an example of LBP computation. 
+ Il pixel centrale viene confrontato con ogni vicino ed il risultato del confronto viene espresso con un numero binario.\\
 
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/LBP_code}
+\caption{ Estrazione del codice LBP.}
+\label{fig:LBPcode}
+\end{center}
+\end{figure}
 
- An illustration of the basic LBP operator is shown in Figure 3.2
-and the corresponding equation is shown below.
-
-R raggio
-P pixel in the neighborhood
-\begin{equation}
-LBP_{P,R}(x, y) = \sum_{p=0}^{P-1}{s(g_p - g_c)2^P}
-\end{equation}
+Riferendoci alla figura \ref{fig:LBPcode} il processo di etichettatura dei pixel è il seguente. Il livello di grigio del pixel centrale, detto anche \emph{pivot} viene confrontato con il livello di grigio di tutti gli altri pixel della maschera che viene binarizzata attraverso la seguente funzione:
 
 \begin{equation}
 s(x) = 	\begin{cases} 1, & \mbox{se } x \ge 0 \\ 0, & \mbox{se } x < 0 \end{cases}
 \end{equation}
 
+dove $x$ è la differenza tra l'intensità del livello di grigio di un pixel del \emph{neighborhood} ed il livello di grigio del pixel pivot. I valori così ottenuti vengono concatenati in senso antiorario andando a formare un codice binario di 8 bit la cui conversione decimale rappresenta il codice \acs{LBP} del pixel pivot.
+
+\subsubsection*{Descrittore}
+Il numero totale di codici \acs{LBP} è pari a $2^8 = 256$.
+L'istogramma dei codici LBP calcolati sui pixel dell'immagine può essere utilizzato come descrittore della texture. In figura \ref{fig:istCompleteLBP} è mostrato l'istogramma di un immagine LBP.
+
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=.95\textwidth]{img/hist-complete}
-\caption{ Istogramma immagine LBP Base }
+\caption{ Istogramma normalizzato di un'immagine LBP. }
 \label{fig:istCompleteLBP}
 \end{center}
 \end{figure}
 
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=.95\textwidth]{img/LBP_code}
-\caption{ Codice LBP }
-\label{fig:LBPcode}
-\end{center}
-\end{figure}
-
-
-
-\subsection{Uniform Local Binary Pattern}
-
-
-Another extension to the original operator is the definition of so called uniform patterns, which can be used to reduce the length of the feature vector and implement a simple rotation-invariant descriptor. This extension was inspired by the fact that some binary patterns occur more commonly in texture images than others. A local binary pattern is called uniform if the binary pattern contains at most two bitwise transitions from 0 to 1 or vice versa when the bit pattern is traversed circularly. For example, the patterns 00000000 (0 transitions), 01110000 (2 transitions) and 11001111 (2 transitions) are uniform whereas the patterns 11001001 (4 transitions) and 01010010 (6 transitions) are not. In the computation of the LBP labels, uniform patterns are used so that there is a separate label for each uniform pattern and all the non-uniform patterns are labeled with a single label. For example, when using (8,R) neighborhood, there are a total of 256 patterns, 58 of which are uniform, which yields in 59 different labels.
-
-Ojala et al. (2002) noticed in their experiments with texture images that uniform patterns account for a little less than 90\% of all patterns when using the (8,1) neighborhood and for around 70\% in the (16,2) neighborhood. Each bin (LBP code) can be regarded as a micro-texton. Local primitives which are codified by these bins include different types of curved edges, spots, flat areas etc. 
-
-\begin{equation}
-LBP_{P,R}^{u2}(x, y)	
-\begin{cases} 
-I(LBP_{P,R}(x, y)), & \mbox{se } U(LBP_{P,R} \le 2, I(z) \in [0, (P-1)P+2 )   \\
-(P-1)P+2, & \mbox{altrimenti}
-\end{cases}
-\end{equation}
-
-\begin{equation}
-U(LBP_{P,R} = |s( g_{P-1} - g_{c}) - s(g_{0} - g_{c}) | + \sum_{p = 1}^{P} |s(g_{p} - g_{c}) - s( g_{P-1} - g_{c}) |
-\end{equation}
-
-
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=.95\textwidth]{img/uniform_LBP}
-\caption{ Uniform LBP }
-\label{fig:uniformLBP}
-\end{center}
-\end{figure}
-
-\subsubsection{Descrittore}
+Per il calcolo dell'istogramma si utilizza la seguente formula:
 
 \begin{equation}
 h(i) = \sum_{x,y} B(LBP_{P,R}(x, y)) = i, i \in  [0, 2^P-1 ]
 \end{equation}
 
+dove
+
 \begin{equation}
 B(v) = 	\begin{cases} 1, & \mbox{v = true} \\ 0, & \mbox{altrimenti} \end{cases}
 \end{equation}
 
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=.95\textwidth]{img/hist-uniform}
-\caption{ Istogramma immagine LBP Base }
-\label{fig:istUniformLBP}
-\end{center}
-\end{figure}
+\subsection{Extended LBP}
+Finora abbiamo considerato come neighborhood i pixel adiacenti a quello di pivot. Una variante dell'operatore \acs{LBP} è l' \acf{ELBP} o \acf{CLBP} . \acs{ELBP} considera come neighborhood i $P$ pixel che si trovano ad una distanza $R$ dal pivot. Le coordinate dei $P$ pixel si possono ottenere con la seguente formula:
 
+\begin{equation}
+(x_p, y_p) = ( - Rsin( \frac{2\pi p}{P} ), Rcos( \frac{2\pi p}{P} ) )  , \quad p = 0, \cdots, P-1
+\end{equation}
 
+Nel caso in cui le coordinate ottenute non corrispondono alla griglia discreta dell'immagine si effettua una interpolazione bilineare.
 
-\subsection{Multiscale Local Binary Pattern}
+In figura \ref{fig:NeighborhoodLBP} sono mostrati alcuni risultati dell'applicazione della formula appena descritta.
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=.95\textwidth]{img/raggio_LBP}
-\caption{ Raggio LBP }
+\caption{ Neighborhood per il calcolo del codice LBP nei casi: $(P=8, R=1)$, $(P=12, R=2)$ e $(P=16, R=4)$. }
+\label{fig:NeighborhoodLBP}
 \end{center}
 \end{figure}
 
-\subsubsection{Descrittore}
 
-j = regione
-r = raggio
-P = num neighbor
+La formula seguente permette di calcolare, in base dieci, il codice LBP di lunghezza $P$ e raggio $R$ generico di un pixel.
+
 \begin{equation}
-h_{P,r,j}(i) = \sum_{x',y' \in M_j} B(LBP_{P,r}(x', y')) = i, i \in  [0, L-1 ], r \in [1, R], j \in [0, J-1]
+LBP_{P,R}(x, y) = \sum_{p=0}^{P-1}{s(g_p - g_c)2^p}
 \end{equation}
+
+\subsection{Uniform Local Binary Pattern}
+Come accennato precedentemente l'istogramma dell'immagine LBP è utilizzato come descrittore della texture. Utilizzando l'operatore LBP base, otteniamo un istogramma con $256$ classi. Per ridurre la dimensione del descrittore si può utilizzare Uniform \acf{LBP}. Uniform \acs{LBP} considera solo i pattern in cui occorrono al più due transizioni da $0$ a $1$ o da $1$ a $0$ tra pixel adiacenti. Per esempio:
+
+\begin{itemize}
+	\item $00000000 \rightarrow 0$ transizioni
+	\item $01110000 \rightarrow 2$ transizioni
+	\item $11001111 \rightarrow 2$ transizioni
+	\item $11001001 \rightarrow 4$ transizioni
+	\item $01010010 \rightarrow 6$ transizioni
+\end{itemize}
+
+I pattern che soddisfano le condizioni di Uniform \acs{LBP} sono in totale $58$, come mostrato in figura \ref{fig:uniformLBP}.
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/uniform_LBP}
+\caption{ Pattern di Uniform LBP.}
+\label{fig:uniformLBP}
+\end{center}
+\end{figure}
+
+Questa variante si basa sul fatto che le feature così estratte sono più robuste al rumore e l'istogramma risultante è di dimensione inferiore mantenendo comunque le feature rilevanti.
+
+In figura \ref{fig:istUniformLBP} è mostrato l'istogramma di un immagine su cui è stato applicato l'operatore di Uniform \acs{LBP}.
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/hist-uniform}
+\caption{ Istogramma normalizzato di una immagine su cui è stato applicato l'operatore di Uniform \acs{LBP}. I primi $58$ pattern sono quelli uniformi, mentre l'ultimo pattern corrisponde a tutti i pixel con codice non uniforme.}
+\label{fig:istUniformLBP}
+\end{center}
+\end{figure}
+
+Per ottenere il codice di Uniform \acs{LBP} si utilizza la formula seguente:
+
+\begin{equation}
+LBP_{P,R}^{u2}(x, y)=	
+\begin{cases} 
+I(LBP_{P,R}(x, y)), & \mbox{se } U(LBP_{P,R}) \le 2, I(z) \in [0, (P-1)P+2 )   \\
+(P-1)P+2, & \mbox{altrimenti}
+\end{cases}
+\end{equation}
+
+dove la funzione $U(x)$ calcola il numero di transizioni.
+
+\begin{equation}
+U(LBP_{P,R}) = |s( g_{P-1} - g_{c}) - s(g_{0} - g_{c}) | + \sum_{p = 1}^{P} |s(g_{p} - g_{c}) - s( g_{P-1} - g_{c}) |
+\end{equation}
+
+\subsection{Multiscale Local Binary Pattern}
+\acf{MLBP} è un'estensione dell'operatore \acs{LBP}. \acs{MLBP} è ottenuto combinando i descrittori delle texture ottenuti facendo variare il raggio $r \in [r_min, R]$ per la determinazione dei neighbor. 
+Alternativamente \acs{MLBP} può essere ottenuto applicando l'operatore \acs{LBP} con raggio costante su l'immagine a risoluzione ridotta. Quest'ultimo metodo è meno efficace in quanto riducendo la risoluzione dell'immagine risulta più difficile estrarre informazioni sul contrasto tra piccole regioni lontane fra loro.
+
+Le feature estratte con \acs{MLBP} risultano migliori rispetto a \acs{LBP} per la classificazione di immagini.
+
+\subsubsection{Descrittore}
+Il descrittore della texture ottenuto con \acs{MLBP} è la concatenazione degli istogrammi ottenuti applicando iterativamente \acs{LBP} sulla stessa immagine al variare del raggio $r \in \left\lbrace  r_1, r_2, \cdots, r_R \right\rbrace$. Il descrittore è dato dalla seguente formula:
+
+\begin{equation}
+f = [h_{P, r_{1}}, h_{P, r_{2}}, \cdots, h_{P, r_R}]
+\end{equation}
+
+\noindent dove
+
+\begin{equation}
+h_{P,r}(i) = \sum_{x, y} B(LBP_{P,r}(x, y)) = i, i \in  [0, L-1 ], r \in \left\lbrace  r_1, r_2, \cdots, r_R \right\rbrace
+\end{equation}
+
+\noindent con $L$ numero massimo di classi dell'istogramma e
 
 \begin{equation}
 B(v) = 	\begin{cases} 1, & \mbox{v = true} \\ 0, & \mbox{altrimenti} \end{cases}
 \end{equation}
 
-\begin{equation}
-f_{j} = [h_{P, 1, j}, h_{P, 2, j}, \cdots, h_{P, R, j}]
-\end{equation}
-
 \subsection{Filtro di smoothing gaussiano}
-I filtri di \emph{smoothing} vengono utilizzati principalmente per ridurre il rumore presente nell'immagine. Sono anche detti \emph{filtri di media}. Infatti facendo scorrere lungo l'immagine la maschera del filtro, detta anche \emph{kernel mask}, il valore di ogni pixel viene sostituito con la media pesata dei livelli di grigio dei pixel interni alla regione della maschera. Il processo di smoothing permette di ridurre i dettagli meno significativi dell'immagine e mettere in risalto le caratteristiche strutturali della stesssa.
+I filtri di \emph{smoothing} vengono utilizzati principalmente per ridurre il rumore presente nell'immagine. Sono anche detti \emph{filtri di media}. Infatti facendo scorrere lungo l'immagine la maschera del filtro, detta anche \emph{kernel mask}, il valore di ogni pixel viene sostituito con la media pesata dei livelli di grigio dei pixel interni alla regione della maschera. Il processo di smoothing permette di ridurre i dettagli meno significativi dell'immagine e mettere in risalto le caratteristiche strutturali della stessa.
 Un effetto indesiderato dello smoothing è quello di produrre un'immagine sfocata, soprattutto se applicato iterativamente.
-La figura \ref{fig:kernelMask} mostra un filtro di smoothing generico 3x3. La mascherà del filtro verrà moltiplicata per un coefficiente di normalizzazione in modo tale che la somma degli elementi della mascherà faccia uno. I coefficienti della maschera vengono scendi secondo il seguente principio: il peso associato al pixel centrale assume un valore superiore rispetto agli altri. I pesi associati agli altri pixel assumono valori decrescenti all'aumentare della distanza dal pixel centrale. In altre parole si vuole fare in modo che il pixel centrale abbia una maggiore importanza nel calcolo della media. Viceversa i pixel più lontani da quello centrale peseranno di meno nel calcolo della media. Questo permette di ridurre l'effetto indesiderato del processo di smoothing.
+La figura \ref{fig:kernelMask} mostra un filtro di smoothing generico 3x3. La maschera del filtro verrà moltiplicata per un coefficiente di normalizzazione in modo tale che la somma degli elementi della mascherà sia uno. I coefficienti della maschera vengono scelti secondo il seguente principio: il peso associato al pixel centrale assume un valore superiore rispetto agli altri. I pesi associati agli altri pixel assumono valori decrescenti all'aumentare della distanza dal pixel centrale. In altre parole si vuole fare in modo che il pixel centrale abbia una maggiore importanza nel calcolo della media. Viceversa i pixel più lontani da quello centrale peseranno di meno nel calcolo della media. Questo permette di ridurre l'effetto indesiderato del processo di smoothing.
 
 \begin{figure}[ht]
 \begin{center}
@@ -133,7 +176,7 @@ La figura \ref{fig:kernelMask} mostra un filtro di smoothing generico 3x3. La ma
 \end{center}
 \end{figure}
 
-Dunque, per ridurre l'effetto indesiderato dello smoothing si è scelto di utilizzare il filtro di smoothing gaussiano. I coefficienti della maschera sono calcolati utilizzando la \emph{2D Gaussian Smoothing Operator} $G(x,y)$, cui formula è riportata qui di seguito:
+I coefficienti della maschera sono calcolati utilizzando la \emph{2D Gaussian Smoothing Operator} $G(x,y)$, cui formula è riportata qui di seguito:
 
 \begin{equation}
 G(x, y) = e^{- \frac{(x^2 + y^2)}{2\sigma^2}}
@@ -142,7 +185,7 @@ G(x, y) = e^{- \frac{(x^2 + y^2)}{2\sigma^2}}
 La dimensione $n$ della kernel mask è legata al valore di $\sigma$ dalla seguente formula:
 
 \begin{equation}
-3\sigma - 1 = n
+6\sigma - 1 = n
 \end{equation}
 
 %\begin{center}

@@ -76,4 +76,23 @@ Sim(I, J) = \frac{f_{I}f_{J}'}{||f_{I}|| ||f_{J}||}
 Sim(I, J) = \frac{\sigma_{f_{I}f_{J}}}{\sigma_{f_{I}}\sigma_{f_{J}}}
 \end{equation}
 
+
+
+
+
+j = regione
+r = raggio
+P = num neighbor
+\begin{equation}
+h_{P,r,j}(i) = \sum_{x',y' \in M_j} B(LBP_{P,r}(x', y')) = i, i \in  [0, L-1 ], r \in [1, R], j \in [0, J-1]
+\end{equation}
+
+\begin{equation}
+B(v) = 	\begin{cases} 1, & \mbox{v = true} \\ 0, & \mbox{altrimenti} \end{cases}
+\end{equation}
+
+\begin{equation}
+f_{j} = [h_{P, 1, j}, h_{P, 2, j}, \cdots, h_{P, R, j}]
+\end{equation}
+
 \end{itemize}

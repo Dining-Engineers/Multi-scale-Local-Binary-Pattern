@@ -2,14 +2,15 @@
 \BOOKMARK [2][-]{subsection.1.1}{Description of region features}{section.1}% 2
 \BOOKMARK [1][-]{section.2}{Multi-scale Local Binary Pattern}{}% 3
 \BOOKMARK [2][-]{subsection.2.1}{Local Binary Pattern}{section.2}% 4
-\BOOKMARK [2][-]{subsection.2.2}{Uniform Local Binary Pattern}{section.2}% 5
-\BOOKMARK [3][-]{subsubsection.2.2.1}{Descrittore}{subsection.2.2}% 6
-\BOOKMARK [2][-]{subsection.2.3}{Multiscale Local Binary Pattern}{section.2}% 7
-\BOOKMARK [3][-]{subsubsection.2.3.1}{Descrittore}{subsection.2.3}% 8
-\BOOKMARK [2][-]{subsection.2.4}{Filtro di smoothing gaussiano}{section.2}% 9
-\BOOKMARK [1][-]{section.3}{Implementazione}{}% 10
-\BOOKMARK [2][-]{subsection.3.1}{Segmentazione}{section.3}% 11
-\BOOKMARK [2][-]{subsection.3.2}{Misura di similarit\340}{section.3}% 12
-\BOOKMARK [1][-]{section.4}{Conclusioni}{}% 13
-\BOOKMARK [1][-]{section.4}{Acronimi}{}% 14
-\BOOKMARK [1][-]{section*.18}{Bibliografia}{}% 15
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Descrizione}{subsection.2.1}% 5
+\BOOKMARK [2][-]{subsection.2.2}{Extended LBP}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.3}{Uniform Local Binary Pattern}{section.2}% 7
+\BOOKMARK [2][-]{subsection.2.4}{Multiscale Local Binary Pattern}{section.2}% 8
+\BOOKMARK [3][-]{subsubsection.2.4.1}{Descrittore}{subsection.2.4}% 9
+\BOOKMARK [2][-]{subsection.2.5}{Filtro di smoothing gaussiano}{section.2}% 10
+\BOOKMARK [1][-]{section.3}{Implementazione}{}% 11
+\BOOKMARK [2][-]{subsection.3.1}{Segmentazione}{section.3}% 12
+\BOOKMARK [2][-]{subsection.3.2}{Misura di similarit\340}{section.3}% 13
+\BOOKMARK [1][-]{section.4}{Conclusioni}{}% 14
+\BOOKMARK [1][-]{section.4}{Acronimi}{}% 15
+\BOOKMARK [1][-]{section*.22}{Bibliografia}{}% 16
