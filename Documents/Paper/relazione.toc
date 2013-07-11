@@ -11,11 +11,10 @@
 \contentsline {subsection}{\numberline {2.5}Filtro di smoothing gaussiano}{9}{subsection.2.5}
 \contentsline {section}{\numberline {3}Implementazione}{11}{section.3}
 \contentsline {subsection}{\numberline {3.1}Strumenti}{11}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Analisi dell'immagine}{11}{subsection.3.2}
-\contentsline {subsubsection}{\numberline {3.2.1}Segmentazione}{11}{subsubsection.3.2.1}
-\contentsline {subsection}{\numberline {3.3}Misura di similarit\IeC {\`a}}{11}{subsection.3.3}
-\contentsline {subsection}{\numberline {3.4}Testing}{13}{subsection.3.4}
-\contentsline {subsection}{\numberline {3.5}Risultati}{13}{subsection.3.5}
-\contentsline {section}{\numberline {4}Conclusioni}{15}{section.4}
-\contentsline {section}{Acronimi}{16}{section.4}
-\contentsline {section}{Bibliografia}{17}{section*.22}
+\contentsline {subsection}{\numberline {3.2}Analisi dell'immagine}{12}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Segmentazione}{12}{subsubsection.3.2.1}
+\contentsline {subsection}{\numberline {3.3}Misura di similarit\IeC {\`a}}{14}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Testing}{15}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.5}Risultati e conclusioni}{16}{subsection.3.5}
+\contentsline {section}{Acronimi}{18}{figure.caption.20}
+\contentsline {section}{Bibliografia}{19}{section*.23}

@@ -2,35 +2,94 @@
 In questo capitolo bla bla bla
 
 \subsection{Strumenti}
-- abbiamo usato matlab
-- codice è su github
+Per lo studio e l'implementazione del \acf{MLBP} è stata creata una libreria in Matlab. 
+Matlab (Matrix Laboratory) è un ambiente per il calcolo numerico e l'analisi statistica che comprende anche l'omonimo linguaggio di programmazione creato dalla MathWorks \cite{MATLAB:2013}.
 
+La libreria creata è stata utilizzata in un'applicazione per la rilevazione di errori all'interno di immagini di tessiture.
+Per permettere un uso agevole del software e della configurazione dei parametri è stata sviluppata una \acf{GUI}, mostrata in figura \ref{fig:GUI}.
+
+Il codice sorgete di tutta l'applicazione è disponibile sul servizio di versioning Github (\href{http://dining-engineers.github.io/Multi-scale-Local-Binary-Pattern/}{http://dining-engineers.github.io/Multi-scale-Local-Binary-Pattern/}).\\
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=.95\textwidth]{img/gui}
-\caption{ GUI }
+\caption{GUI.}
 \label{fig:GUI}
 \end{center}
 \end{figure}
 
 \subsection{Analisi dell'immagine}
-- codice figo di lbp matrice
-- mlbp += lbp + smoothing;
+\label{imp:analisi}
+Nel contesto della nostra applicazione, le immagini in esame saranno analizzate in scala di grigio.
+Per ottenere un descrittore della texture dell'immagine è stata implementata la funzione
+
+\begin{lstlisting}
+function [ descriptor ] = getMLBPDescriptor( img, mapping, radii, num_region_rows, num_region_cols, sigma_coefficient )
+\end{lstlisting}
+
+che richiede in input: l'immagine da elaborare, la variante di \acs{LBP} da utilizzare (nel nostro caso Uniform LBP), un array contenente i raggi per fare \acs{MLBP}, il numero di righe e colonne in cui l'immagine verrà segmentata ( paragrafo \ref{imp:seg}) ed infine il valore della deviazione standard per l'applicazione del filtro di smoothing gaussiano.
+
+Al suo interno, getMLBPDescriptor(), applica iterativamente all'immagine l'operatore \acs{LBP}.
+Ad ogni iterazione $i$, all'immagine viene inizialmente applicato il filtro di smoothing gaussiano
+
+\begin{lstlisting}
+% apply gauss smoothing with sigma = LBP radius
+myfilter = fspecial( 'gaussian', kernel_size, sigma_coefficient );
+img = imfilter( img, myfilter, 'replicate' );
+\end{lstlisting}
+
+\noindent Successivamente viene chiamata la funzione\cite{lbpcode}
+
+\begin{lstlisting}
+function [lbp_img] = lbp( img, radius, num_neighbors, mapping );
+\end{lstlisting}
+
+\noindent che calcola l'immagine \acs{LBP} con raggio $radii(i)$, (paragrafo \ref{MLBP:extended}).
 
 \subsubsection{Segmentazione}
-- segmentazione bovina in regioni
+\label{imp:seg}
+Al fine di determinare le regioni della tessitura in cui sono presenti degli errori, abbiamo deciso di suddividere l'immagine in regioni non sovrapposte. I parametri $num_region_rows$ e $num_region_cols$ determinano il numero di regioni in cui l'immagine viene suddivisa.
+Le regioni sono numerate da $0$ a $num\_region\_rows \cdot num\_region\_cols - 1$.
+Le coordinate della k-esima regione sono ottenute attraverso l'utilizzo della funzione
+
+\begin{lstlisting}
+function [ rMin, rMax, cMin, cMax ] = gridBounds( imgSize, num_region_rows, num_region_cols, k )
+\end{lstlisting}
+
+In figura \ref{fig:GUIpreLBP} viene mostrata la suddivisione in regioni dell'immagine di input. \\
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=.95\textwidth]{img/gui_pre_lbp}
-\caption{ GUI pre LBP }
+\caption{ Screenshot della GUI in cui viene mostrata la suddivisione in regioni dell'immagine di input.}
 \label{fig:GUIpreLBP}
 \end{center}
 \end{figure}
 
+In seguito all'operazione di segmentazione dell'immagine, per ogni regione, viene estratto il relativo descrittore \acs{MLBP}:
 
-- istogramma
+\begin{equation*}
+f = [h_{P, r_{1}}, h_{P, r_{2}}, \cdots, h_{P, r_R}]
+\end{equation*}
+
+
+\noindent come spiegato nel paragrafo \ref{mlbp:desc-mlbp}. 
+
+
+
+%	\pagebreak 
+%	
+%	La costruzione dell'istogramma associato all'LBP di raggio r, $h_{P,r}$ è ottenuta nel modo seguente:
+	
+%	\begin{lstlisting}
+%	M = lbp_image(rMin:rMax, cMin:cMax );
+%	% compute histogram of subregion M
+%	h = hist(M(:),0:(mapping.num-1));
+%	% normalizie histogram
+%	h = h/sum(h);
+%	\end{lstlisting}
+
+
 
 \subsection{Misura di similarità}
 
@@ -65,58 +124,17 @@ Sim(I, J) = \frac{\sigma_{f_{I}f_{J}}}{\sigma_{f_{I}}\sigma_{f_{J}}}
 \end{equation}
 
 
-
-
-
-j = regione
-r = raggio
-P = num neighbor
-\begin{equation}
-h_{P,r,j}(i) = \sum_{x',y' \in M_j} B(LBP_{P,r}(x', y')) = i, i \in  [0, L-1 ], r \in [1, R], j \in [0, J-1]
-\end{equation}
-
-\begin{equation}
-B(v) = 	\begin{cases} 1, & \mbox{v = true} \\ 0, & \mbox{altrimenti} \end{cases}
-\end{equation}
-
-\begin{equation}
-f_{j} = [h_{P, 1, j}, h_{P, 2, j}, \cdots, h_{P, R, j}]
-\end{equation}
-
 \end{itemize}
 
-
+\pagebreak
 \subsection{Testing}
-- regioni di training
-- soglia di accettabilità 
 
-\subsection{Risultati}
-- risultati
+Lo scopo dell'applicazione è quello di determinare se alcune regioni presentano malformazioni della tessitura al loro interno. Per poter classificare una regione come corretta od errata, è necessario conoscere un certo numero di regioni sicuramente corrette. Come possiamo vedere in figura \ref{fig:GUIpostLBP}, l'utente può specificare nel campo \textit{number of samples regions} il numero delle regioni esatte che vanno a definire il \textit{training set}.
 
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=.95\textwidth]{img/gui_post_lbp}
-\caption{ GUI post LBP }
-\label{fig:GUIpostLBP}
-\end{center}
-\end{figure}
+Ogni regione corretta viene confrontata con tutte le altre regioni del training set utilizzando la misura di similarità $Sim(I, J)$, dove  $I$ e $J$ rappresentano i descrittori \acs{MLBP}.
+In questo modo si ottengono le misure di similarità del training set da cui possiamo estrarre un valore medio ($\mu_{training}$) ed una deviazione standard ($\sigma_{training}$) che definiscono una distribuzione gaussiana delle misure di similarità delle regioni corrette.
 
+Per classificare una regione $k$, che non appartiene al training set, si confronta il suo descrittore con tutti i descrittori del training set utilizzando la misura di similarità $Sim(I, J)$. In questo modo si ottengono le misure di similarità della regione di test con il training set da cui possiamo estrarre un valore medio ($\mu_{test}$) ed una deviazione standard ($\sigma_{test}$).
 
-
-
-
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=.95\textwidth]{img/worst_graph}
-\caption{ Caso peggiore }
-\label{fig:worstGraph}
-\end{center}
-\end{figure}
-
-\begin{figure}[ht]
-\begin{center}
-\includegraphics[width=.95\textwidth]{img/worst_best_graph}
-\caption{ I peggiori tra i migliori }
-\label{fig:worstBestGraph}
-\end{center}
-\end{figure}
+La regione $k$ verrà quindi classificata come corretta se \mbox{$ |\mu_{training}- \mu_{test}| \le 3\sigma_{training}$}. Altrimenti verrà classificata come una regione contenente artefatti.
+\pagebreak

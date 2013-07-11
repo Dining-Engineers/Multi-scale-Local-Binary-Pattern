@@ -28,4 +28,15 @@ T.~Ojala, M.~Pietikainen, and D.~Harwood, ``Performance evaluation of texture
   Computer Vision amp; Image Processing., Proceedings of the 12th IAPR
   International Conference on}, vol.~1, 1994, pp. 582--585 vol.1.
 
+\bibitem{MATLAB:2013}
+MATLAB, \emph{version 8 (R2013a)}.\hskip 1em plus 0.5em minus 0.4em\relax
+  Natick, Massachusetts: The MathWorks Inc., 2013.
+
+\bibitem{lbpcode}
+\BIBentryALTinterwordspacing
+M.~Heikkila and T.~Ahonen. Local binary pattern (lbp) implementation for
+  matlab. [Online]. Available:
+  \url{http://www.cse.oulu.fi/CMV/Downloads/LBPMatlab}
+\BIBentrySTDinterwordspacing
+
 \end{thebibliography}

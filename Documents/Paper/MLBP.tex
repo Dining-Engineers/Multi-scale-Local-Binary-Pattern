@@ -64,6 +64,7 @@ B(v) = 	\begin{cases} 1, & \mbox{v = true} \\ 0, & \mbox{altrimenti} \end{cases}
 \end{equation}
 
 \subsection{Extended LBP}
+\label{MLBP:extended}
 Finora abbiamo considerato come neighborhood i pixel adiacenti a quello di pivot. Una variante dell'operatore \acs{LBP} è l' \acf{ELBP} o \acf{CLBP} . \acs{ELBP} considera come neighborhood i $P$ pixel che si trovano ad una distanza $R$ dal pivot. Le coordinate dei $P$ pixel si possono ottenere con la seguente formula:
 
 \begin{equation}
@@ -145,9 +146,11 @@ Alternativamente \acs{MLBP} può essere ottenuto applicando l'operatore \acs{LBP
 Le feature estratte con \acs{MLBP} risultano migliori rispetto a \acs{LBP} per la classificazione di immagini.
 
 \subsubsection{Descrittore}
+\label{mlbp:desc-mlbp}
 Il descrittore della texture ottenuto con \acs{MLBP} è la concatenazione degli istogrammi ottenuti applicando iterativamente \acs{LBP} sulla stessa immagine al variare del raggio $r \in \left\lbrace  r_1, r_2, \cdots, r_R \right\rbrace$. Il descrittore è dato dalla seguente formula:
 
 \begin{equation}
+\label{mlbp:eq-descriptor}
 f = [h_{P, r_{1}}, h_{P, r_{2}}, \cdots, h_{P, r_R}]
 \end{equation}
 
