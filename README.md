@@ -12,3 +12,5 @@ want for non-commercial purposes. However, it is appreciated if you
 maintain the name of the original authors.
 
 (C) A.Rizzo, M. Bruni
+
+Website: http://dining-engineers.github.io/Multi-scale-Local-Binary-Pattern/
