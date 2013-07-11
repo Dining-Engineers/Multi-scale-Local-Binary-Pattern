@@ -1,6 +1,12 @@
 \section{Implementazione}
+In questo capitolo bla bla bla
 
-\begin{figure}
+\subsection{Strumenti}
+- abbiamo usato matlab
+- codice è su github
+
+
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[width=.95\textwidth]{img/gui}
 \caption{ GUI }
@@ -8,7 +14,14 @@
 \end{center}
 \end{figure}
 
-\begin{figure}
+\subsection{Analisi dell'immagine}
+- codice figo di lbp matrice
+- mlbp += lbp + smoothing;
+
+\subsubsection{Segmentazione}
+- segmentazione bovina in regioni
+
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[width=.95\textwidth]{img/gui_pre_lbp}
 \caption{ GUI pre LBP }
@@ -16,33 +29,8 @@
 \end{center}
 \end{figure}
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=.95\textwidth]{img/gui_post_lbp}
-\caption{ GUI post LBP }
-\label{fig:GUIpostLBP}
-\end{center}
-\end{figure}
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=.95\textwidth]{img/worst_graph}
-\caption{ Caso peggiore }
-\label{fig:worstGraph}
-\end{center}
-\end{figure}
-
-\begin{figure}
-\begin{center}
-\includegraphics[width=.95\textwidth]{img/worst_best_graph}
-\caption{ I peggiori tra i migliori }
-\label{fig:worstBestGraph}
-\end{center}
-\end{figure}
-
-
-
-\subsection{Segmentazione}
+- istogramma
 
 \subsection{Misura di similarità}
 
@@ -96,3 +84,39 @@ f_{j} = [h_{P, 1, j}, h_{P, 2, j}, \cdots, h_{P, R, j}]
 \end{equation}
 
 \end{itemize}
+
+
+\subsection{Testing}
+- regioni di training
+- soglia di accettabilità 
+
+\subsection{Risultati}
+- risultati
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/gui_post_lbp}
+\caption{ GUI post LBP }
+\label{fig:GUIpostLBP}
+\end{center}
+\end{figure}
+
+
+
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/worst_graph}
+\caption{ Caso peggiore }
+\label{fig:worstGraph}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/worst_best_graph}
+\caption{ I peggiori tra i migliori }
+\label{fig:worstBestGraph}
+\end{center}
+\end{figure}

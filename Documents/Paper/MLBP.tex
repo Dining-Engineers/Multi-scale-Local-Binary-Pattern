@@ -67,7 +67,7 @@ B(v) = 	\begin{cases} 1, & \mbox{v = true} \\ 0, & \mbox{altrimenti} \end{cases}
 Finora abbiamo considerato come neighborhood i pixel adiacenti a quello di pivot. Una variante dell'operatore \acs{LBP} è l' \acf{ELBP} o \acf{CLBP} . \acs{ELBP} considera come neighborhood i $P$ pixel che si trovano ad una distanza $R$ dal pivot. Le coordinate dei $P$ pixel si possono ottenere con la seguente formula:
 
 \begin{equation}
-(x_p, y_p) = ( - Rsin( \frac{2\pi p}{P} ), Rcos( \frac{2\pi p}{P} ) )  , \quad p = 0, \cdots, P-1
+(x_p, y_p) = \left(  - Rsin\left( \frac{2\pi p}{P} \right), Rcos\left( \frac{2\pi p}{P} \right) \right)   , \quad p = 0, \cdots, P-1
 \end{equation}
 
 Nel caso in cui le coordinate ottenute non corrispondono alla griglia discreta dell'immagine si effettua una interpolazione bilineare.
@@ -139,7 +139,7 @@ U(LBP_{P,R}) = |s( g_{P-1} - g_{c}) - s(g_{0} - g_{c}) | + \sum_{p = 1}^{P} |s(g
 \end{equation}
 
 \subsection{Multiscale Local Binary Pattern}
-\acf{MLBP} è un'estensione dell'operatore \acs{LBP}. \acs{MLBP} è ottenuto combinando i descrittori delle texture ottenuti facendo variare il raggio $r \in [r_min, R]$ per la determinazione dei neighbor. 
+\acf{MLBP} è un'estensione dell'operatore \acs{LBP}. \acs{MLBP} è ottenuto combinando i descrittori delle texture ottenuti facendo variare il raggio $r \in \left\lbrace  r_1, r_2, \cdots, r_R \right\rbrace$ per la determinazione dei neighbor. 
 Alternativamente \acs{MLBP} può essere ottenuto applicando l'operatore \acs{LBP} con raggio costante su l'immagine a risoluzione ridotta. Quest'ultimo metodo è meno efficace in quanto riducendo la risoluzione dell'immagine risulta più difficile estrarre informazioni sul contrasto tra piccole regioni lontane fra loro.
 
 Le feature estratte con \acs{MLBP} risultano migliori rispetto a \acs{LBP} per la classificazione di immagini.

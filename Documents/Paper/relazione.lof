@@ -7,6 +7,6 @@
 \contentsline {figure}{\numberline {6}{\ignorespaces Esempio di una kernel mask di dimensioni 3x3, dove $\omega _{i,j}$ reppresenta il peso applicato al valore del livello di grigio del corrispettivo pixel nell'immagine\relax }}{10}{figure.caption.14}
 \contentsline {figure}{\numberline {7}{\ignorespaces GUI \relax }}{11}{figure.caption.15}
 \contentsline {figure}{\numberline {8}{\ignorespaces GUI pre LBP \relax }}{12}{figure.caption.16}
-\contentsline {figure}{\numberline {9}{\ignorespaces GUI post LBP \relax }}{12}{figure.caption.17}
-\contentsline {figure}{\numberline {10}{\ignorespaces Caso peggiore \relax }}{13}{figure.caption.18}
-\contentsline {figure}{\numberline {11}{\ignorespaces I peggiori tra i migliori \relax }}{13}{figure.caption.19}
+\contentsline {figure}{\numberline {9}{\ignorespaces GUI post LBP \relax }}{13}{figure.caption.17}
+\contentsline {figure}{\numberline {10}{\ignorespaces Caso peggiore \relax }}{14}{figure.caption.18}
+\contentsline {figure}{\numberline {11}{\ignorespaces I peggiori tra i migliori \relax }}{14}{figure.caption.19}
