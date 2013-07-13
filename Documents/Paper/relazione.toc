@@ -1,20 +1,19 @@
 \select@language {italian}
-\contentsline {section}{\numberline {1}Introduzione}{2}{section.1}
-\contentsline {subsection}{\numberline {1.1}Description of region features}{2}{subsection.1.1}
-\contentsline {section}{\numberline {2}Multi-scale Local Binary Pattern}{3}{section.2}
-\contentsline {subsection}{\numberline {2.1}Local Binary Pattern}{3}{subsection.2.1}
-\contentsline {subsubsection}{\numberline {2.1.1}Descrizione}{3}{subsubsection.2.1.1}
-\contentsline {subsection}{\numberline {2.2}Extended LBP}{5}{subsection.2.2}
-\contentsline {subsection}{\numberline {2.3}Uniform Local Binary Pattern}{6}{subsection.2.3}
-\contentsline {subsection}{\numberline {2.4}Multiscale Local Binary Pattern}{8}{subsection.2.4}
-\contentsline {subsubsection}{\numberline {2.4.1}Descrittore}{9}{subsubsection.2.4.1}
-\contentsline {subsection}{\numberline {2.5}Filtro di smoothing gaussiano}{9}{subsection.2.5}
-\contentsline {section}{\numberline {3}Implementazione}{11}{section.3}
-\contentsline {subsection}{\numberline {3.1}Strumenti}{11}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Analisi dell'immagine}{12}{subsection.3.2}
-\contentsline {subsubsection}{\numberline {3.2.1}Segmentazione}{12}{subsubsection.3.2.1}
-\contentsline {subsection}{\numberline {3.3}Misura di similarit\IeC {\`a}}{14}{subsection.3.3}
-\contentsline {subsection}{\numberline {3.4}Testing}{15}{subsection.3.4}
-\contentsline {subsection}{\numberline {3.5}Risultati e conclusioni}{16}{subsection.3.5}
-\contentsline {section}{Acronimi}{18}{figure.caption.20}
-\contentsline {section}{Bibliografia}{19}{section*.23}
+\contentsline {section}{\numberline {1}Texture}{4}{section.1}
+\contentsline {section}{\numberline {2}Multi-scale Local Binary Pattern}{6}{section.2}
+\contentsline {subsection}{\numberline {2.1}Local Binary Pattern}{6}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}Descrizione}{6}{subsubsection.2.1.1}
+\contentsline {subsection}{\numberline {2.2}Extended LBP}{8}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Uniform Local Binary Pattern}{9}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}Multiscale Local Binary Pattern}{11}{subsection.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}Descrittore}{12}{subsubsection.2.4.1}
+\contentsline {subsection}{\numberline {2.5}Filtro di smoothing gaussiano}{12}{subsection.2.5}
+\contentsline {section}{\numberline {3}Implementazione}{14}{section.3}
+\contentsline {subsection}{\numberline {3.1}Strumenti}{14}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Analisi dell'immagine}{15}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Segmentazione}{15}{subsubsection.3.2.1}
+\contentsline {subsection}{\numberline {3.3}Misura di similarit\IeC {\`a}}{17}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Testing}{18}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.5}Risultati e conclusioni}{19}{subsection.3.5}
+\contentsline {section}{Acronimi}{21}{figure.caption.22}
+\contentsline {section}{Bibliografia}{23}{section*.24}

@@ -1,12 +1,13 @@
 \select@language {italian}
-\contentsline {figure}{\numberline {1}{\ignorespaces Estrazione del codice LBP.\relax }}{4}{figure.caption.6}
-\contentsline {figure}{\numberline {2}{\ignorespaces Istogramma normalizzato di un'immagine LBP. \relax }}{5}{figure.caption.8}
-\contentsline {figure}{\numberline {3}{\ignorespaces Neighborhood per il calcolo del codice LBP nei casi: $(P=8, R=1)$, $(P=12, R=2)$ e $(P=16, R=4)$. \relax }}{6}{figure.caption.11}
-\contentsline {figure}{\numberline {4}{\ignorespaces Pattern di Uniform LBP.\relax }}{7}{figure.caption.12}
-\contentsline {figure}{\numberline {5}{\ignorespaces Istogramma normalizzato di una immagine su cui \IeC {\`e} stato applicato l'operatore di Uniform \acs {LBP}. I primi $58$ pattern sono quelli uniformi, mentre l'ultimo pattern corrisponde a tutti i pixel con codice non uniforme.\relax }}{8}{figure.caption.13}
-\contentsline {figure}{\numberline {6}{\ignorespaces Esempio di una kernel mask di dimensioni 3x3, dove $\omega _{i,j}$ reppresenta il peso applicato al valore del livello di grigio del corrispettivo pixel nell'immagine\relax }}{10}{figure.caption.14}
-\contentsline {figure}{\numberline {7}{\ignorespaces GUI.\relax }}{11}{figure.caption.16}
-\contentsline {figure}{\numberline {8}{\ignorespaces Screenshot della GUI in cui viene mostrata la suddivisione in regioni dell'immagine di input.\relax }}{13}{figure.caption.17}
-\contentsline {figure}{\numberline {9}{\ignorespaces Risultati dell'operazione di classificazione. Le regioni con contorno di colore rosso sono quelle contenenti artefatti, le regioni di colore blu sono quelle del training set e le regioni con contorno verde sono quelle ritenute corrette. \relax }}{16}{figure.caption.18}
-\contentsline {figure}{\numberline {10}{\ignorespaces Caso peggiore \relax }}{17}{figure.caption.19}
-\contentsline {figure}{\numberline {11}{\ignorespaces I peggiori tra i migliori \relax }}{17}{figure.caption.20}
+\contentsline {figure}{\numberline {1}{\ignorespaces Immagini di tessiture.\relax }}{4}{figure.caption.5}
+\contentsline {figure}{\numberline {2}{\ignorespaces Estrazione del codice LBP.\relax }}{7}{figure.caption.8}
+\contentsline {figure}{\numberline {3}{\ignorespaces Istogramma normalizzato di un'immagine LBP. \relax }}{8}{figure.caption.10}
+\contentsline {figure}{\numberline {4}{\ignorespaces Neighborhood per il calcolo del codice LBP nei casi: $(P=8, R=1)$, $(P=12, R=2)$ e $(P=16, R=4)$. \relax }}{9}{figure.caption.13}
+\contentsline {figure}{\numberline {5}{\ignorespaces Pattern di Uniform LBP.\relax }}{10}{figure.caption.14}
+\contentsline {figure}{\numberline {6}{\ignorespaces Istogramma normalizzato di una immagine su cui \IeC {\`e} stato applicato l'operatore di Uniform \acs {LBP}. I primi $58$ pattern sono quelli uniformi, mentre l'ultimo pattern corrisponde a tutti i pixel con codice non uniforme.\relax }}{11}{figure.caption.15}
+\contentsline {figure}{\numberline {7}{\ignorespaces Esempio di una kernel mask di dimensioni 3x3, dove $\omega _{i,j}$ reppresenta il peso applicato al valore del livello di grigio del corrispettivo pixel nell'immagine\relax }}{13}{figure.caption.16}
+\contentsline {figure}{\numberline {8}{\ignorespaces GUI.\relax }}{14}{figure.caption.18}
+\contentsline {figure}{\numberline {9}{\ignorespaces Screenshot della GUI in cui viene mostrata la suddivisione in regioni dell'immagine di input.\relax }}{16}{figure.caption.19}
+\contentsline {figure}{\numberline {10}{\ignorespaces Risultati dell'operazione di classificazione. Le regioni con contorno di colore rosso sono quelle contenenti artefatti, le regioni di colore blu sono quelle del training set e le regioni con contorno verde sono quelle ritenute corrette. \relax }}{19}{figure.caption.20}
+\contentsline {figure}{\numberline {11}{\ignorespaces Caso peggiore \relax }}{20}{figure.caption.21}
+\contentsline {figure}{\numberline {12}{\ignorespaces I peggiori tra i migliori \relax }}{20}{figure.caption.22}

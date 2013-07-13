@@ -21,12 +21,23 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{Stockman:2001:CV:558008}
+G.~Stockman and L.~G. Shapiro, \emph{Computer Vision}, 1st~ed.\hskip 1em plus
+  0.5em minus 0.4em\relax Upper Saddle River, NJ, USA: Prentice Hall PTR, 2001.
+
+\bibitem{SlidePala}
+3.02 - local feature - texture description.
+
 \bibitem{LBPfirst}
 T.~Ojala, M.~Pietikainen, and D.~Harwood, ``Performance evaluation of texture
   measures with classification based on kullback discrimination of
   distributions,'' in \emph{Pattern Recognition, 1994. Vol. 1 - Conference A:
   Computer Vision amp; Image Processing., Proceedings of the 12th IAPR
   International Conference on}, vol.~1, 1994, pp. 582--585 vol.1.
+
+\bibitem{Chan-PHD}
+C.~H. Chan, ``Multi-scale local binary pattern histogram for face
+  recognition.''
 
 \bibitem{MATLAB:2013}
 MATLAB, \emph{version 8 (R2013a)}.\hskip 1em plus 0.5em minus 0.4em\relax

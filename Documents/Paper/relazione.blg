@@ -6,8 +6,11 @@ A level-1 auxiliary file: Conclusioni.aux
 A level-1 auxiliary file: Acronimi.aux
 The style file: IEEEtran.bst
 Database file #1: bibliography.bib
+Warning--entry type for "Chan-PHD" isn't style-file defined
+--line 54 of file bibliography.bib
 -- IEEEtran.bst version 1.13 (2008/09/30) by Michael Shell.
 -- http://www.michaelshell.org/tex/ieeetran/bibtex/
 -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
 
 Done.
+(There was 1 warning)

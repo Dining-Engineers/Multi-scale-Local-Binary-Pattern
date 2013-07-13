@@ -1,51 +1,56 @@
-\section{Introduzione}
-
-\subsection{Description of region features}
-
-Texture is a very general notion that can be
-attributed to almost everything in nature.
-For a human, the texture relates mostly to:
-A specific, spatially repetitive (micro)structure of surfaces
-formed by repeating a particular element or several
-elements in different relative spatial positions.
-Generally, the repetition involves local variations of scale,
-orientation, or other geometric and optical features of the
-elements.Texture
-Texture is a property of regions: the texture of a
-point is undefined
-Texture involves the spatial distribution of gray
-levels or colors
-Texture in an image can be perceived at different
-scales or levels of resolution
-A region is perceived to have texture when the
-number of primitive elements in the region is large. If
-only a few primitive elements are present, then a
-group of countable objects is perceived instead of a
-textured imageTexture
-It is almost impossible to provide a complete description of
-textures in words
-However, words capture some informal qualitative
-features that can help
-discriminate different
-textures
-fineness - coarseness,
-smoothness,
-granularity,
-lineation,
-directionality,
-regularity - randomness
+\section*{Sommario}
+In questa relazione, gli autori presentano un'applicazione che determina se regioni di un'immagine contengono malformazioni della tessitura al loro interno.
+Verrà fatta una panoramica sulle immagini di tessiture. Successivamente saranno presentati i concetti teorici alla base dell'operatore \acf{LBP} ed infine verranno mostrati gli strumenti utilizzati per lo sviluppo ed i risultati ottenuti.
 
 
-Texture models can be of interest for three
-main purposes:
-Segmentation: partition the input image
-into regions of uniform texture
+\newpage
+\null 
+\thispagestyle{empty}
+\newpage
 
 
-Classification: produce a classification map of the
-input image where each uniform textured region
-is identified with the texture class it belongs to
+\section{Texture}
+
+Una texture è una nozione generale che può avere molteplici significati. In particolare nel contesto della percezione umana una texture è una specifica struttura di superfici, formate da uno o più particolari elementi, che si ripetono nello spazio.
+Questa ripetizione può riguardare:
+
+\begin{itemize}
+	\item la variazione locale di scala;
+	\item l'orientazione;
+	\item la distribuzione spaziale dei livelli di grigio o del colore\cite{Stockman:2001:CV:558008};
+	\item o altre caratteristiche geometriche dell'elemento.
+\end{itemize}
+
+\noindent In figura \ref{fig:Texture} sono rappresentati alcuni esempi di immagini di tessiture. \\
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/Texture}
+\caption{ Immagini di tessiture.}
+\label{fig:Texture}
+\end{center}
+\end{figure}
 
 
-Synthesis: generate an image with a texture that
-looks like a requested texture class
+Una immagine è percepita contenente tessiture quando il numero di elementi che la compongono è sufficientemente numeroso.
+Se il numero di elementi presenti nell'immagine è ridotto, allora questi sono percepiti come un gruppo di oggetti numerabili invece che una tessitura\cite{SlidePala}.
+
+Alcune delle caratteristiche qualitative che possono essere utilizzate per differenziare le texture sono:
+
+\begin{itemize}
+\item fineness - coarseness,
+\item smoothness,
+\item granularity,
+\item lineation,
+\item directionality,
+\item regularity - randomness
+\end{itemize}
+
+\noindent L'utilizzo di modelli di tessiture può trovare interessanti applicazioni nel contesto della:
+
+\begin{itemize}
+\item Segmentazione di immagini;
+\item Classificazione di immagini.
+\end{itemize}
+
+La \textit{segmentazione} di immagini consiste nel suddividerle in regioni che presentano tessiture uniformi. La \textit{classificazione}, associa ad ogni regione ottenuta dal processo di segmentazione la sua classe di appartenenza.

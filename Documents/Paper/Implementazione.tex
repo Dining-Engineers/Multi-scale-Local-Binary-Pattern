@@ -1,9 +1,9 @@
 \section{Implementazione}
-In questo capitolo bla bla bla
+In questo capitolo verranno illustrati gli strumenti e gli algoritmi utilizzati per l'implementazione del software.
 
 \subsection{Strumenti}
 Per lo studio e l'implementazione del \acf{MLBP} è stata creata una libreria in Matlab. 
-Matlab (Matrix Laboratory) è un ambiente per il calcolo numerico e l'analisi statistica che comprende anche l'omonimo linguaggio di programmazione creato dalla MathWorks \cite{MATLAB:2013}.
+Matlab (MATrix LABoratory) è un ambiente per il calcolo numerico e l'analisi statistica che comprende anche l'omonimo linguaggio di programmazione creato dalla MathWorks \cite{MATLAB:2013}.
 
 La libreria creata è stata utilizzata in un'applicazione per la rilevazione di errori all'interno di immagini di tessiture.
 Per permettere un uso agevole del software e della configurazione dei parametri è stata sviluppata una \acf{GUI}, mostrata in figura \ref{fig:GUI}.
@@ -33,7 +33,7 @@ Al suo interno, getMLBPDescriptor(), applica iterativamente all'immagine l'opera
 Ad ogni iterazione $i$, all'immagine viene inizialmente applicato il filtro di smoothing gaussiano
 
 \begin{lstlisting}
-% apply gauss smoothing with sigma = LBP radius
+% apply gauss smoothing
 myfilter = fspecial( 'gaussian', kernel_size, sigma_coefficient );
 img = imfilter( img, myfilter, 'replicate' );
 \end{lstlisting}
@@ -48,7 +48,7 @@ function [lbp_img] = lbp( img, radius, num_neighbors, mapping );
 
 \subsubsection{Segmentazione}
 \label{imp:seg}
-Al fine di determinare le regioni della tessitura in cui sono presenti degli errori, abbiamo deciso di suddividere l'immagine in regioni non sovrapposte. I parametri $num_region_rows$ e $num_region_cols$ determinano il numero di regioni in cui l'immagine viene suddivisa.
+Al fine di determinare le regioni della tessitura in cui sono presenti degli errori, abbiamo deciso di suddividere l'immagine in regioni non sovrapposte. I parametri $num\_region\_rows$ e $num\_region\_cols$ determinano il numero di regioni in cui l'immagine viene suddivisa.
 Le regioni sono numerate da $0$ a $num\_region\_rows \cdot num\_region\_cols - 1$.
 Le coordinate della k-esima regione sono ottenute attraverso l'utilizzo della funzione
 
@@ -129,7 +129,7 @@ Sim(I, J) = \frac{\sigma_{f_{I}f_{J}}}{\sigma_{f_{I}}\sigma_{f_{J}}}
 \pagebreak
 \subsection{Testing}
 
-Lo scopo dell'applicazione è quello di determinare se alcune regioni presentano malformazioni della tessitura al loro interno. Per poter classificare una regione come corretta od errata, è necessario conoscere un certo numero di regioni sicuramente corrette. Come possiamo vedere in figura \ref{fig:GUIpostLBP}, l'utente può specificare nel campo \textit{number of samples regions} il numero delle regioni esatte che vanno a definire il \textit{training set}.
+Lo scopo dell'applicazione è quello di determinare se alcune regioni presentano malformazioni della tessitura al loro interno. Per poter classificare una regione come corretta o errata, è necessario conoscere un certo numero di regioni sicuramente corrette. Come possiamo vedere in figura \ref{fig:GUIpostLBP}, l'utente può specificare nel campo \textit{number of samples regions} il numero delle regioni esatte che vanno a definire il \textit{training set}.
 
 Ogni regione corretta viene confrontata con tutte le altre regioni del training set utilizzando la misura di similarità $Sim(I, J)$, dove  $I$ e $J$ rappresentano i descrittori \acs{MLBP}.
 In questo modo si ottengono le misure di similarità del training set da cui possiamo estrarre un valore medio ($\mu_{training}$) ed una deviazione standard ($\sigma_{training}$) che definiscono una distribuzione gaussiana delle misure di similarità delle regioni corrette.
