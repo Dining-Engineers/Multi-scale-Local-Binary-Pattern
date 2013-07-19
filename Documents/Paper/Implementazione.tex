@@ -27,7 +27,7 @@ Per ottenere un descrittore della texture dell'immagine è stata implementata la
 function [ descriptor ] = getMLBPDescriptor( img, mapping, radii, num_region_rows, num_region_cols, sigma_coefficient )
 \end{lstlisting}
 
-che richiede in input: l'immagine da elaborare, la variante di \acs{LBP} da utilizzare (nel nostro caso Uniform LBP), un array contenente i raggi per fare \acs{MLBP}, il numero di righe e colonne in cui l'immagine verrà segmentata ( paragrafo \ref{imp:seg}) ed infine il valore della deviazione standard per l'applicazione del filtro di smoothing gaussiano.
+che richiede in input: l'immagine da elaborare, la variante di \acs{LBP} da utilizzare (nel nostro caso Uniform LBP), un array contenente i raggi per fare \acs{MLBP}, il numero di righe e colonne in cui l'immagine verrà suddivisa ( paragrafo \ref{imp:seg}) ed infine il valore della deviazione standard per l'applicazione del filtro di smoothing gaussiano.
 
 Al suo interno, getMLBPDescriptor(), applica iterativamente all'immagine l'operatore \acs{LBP}.
 Ad ogni iterazione $i$, all'immagine viene inizialmente applicato il filtro di smoothing gaussiano
@@ -46,7 +46,7 @@ function [lbp_img] = lbp( img, radius, num_neighbors, mapping );
 
 \noindent che calcola l'immagine \acs{LBP} con raggio $radii(i)$, (paragrafo \ref{MLBP:extended}).
 
-\subsubsection{Segmentazione}
+\subsubsection{Suddivisione dell'immagine in regioni}
 \label{imp:seg}
 Al fine di determinare le regioni della tessitura in cui sono presenti degli errori, abbiamo deciso di suddividere l'immagine in regioni non sovrapposte. I parametri $num\_region\_rows$ e $num\_region\_cols$ determinano il numero di regioni in cui l'immagine viene suddivisa.
 Le regioni sono numerate da $0$ a $num\_region\_rows \cdot num\_region\_cols - 1$.
@@ -134,7 +134,13 @@ Lo scopo dell'applicazione è quello di determinare se alcune regioni presentano
 Ogni regione corretta viene confrontata con tutte le altre regioni del training set utilizzando la misura di similarità $Sim(I, J)$, dove  $I$ e $J$ rappresentano i descrittori \acs{MLBP}.
 In questo modo si ottengono le misure di similarità del training set da cui possiamo estrarre un valore medio ($\mu_{training}$) ed una deviazione standard ($\sigma_{training}$) che definiscono una distribuzione gaussiana delle misure di similarità delle regioni corrette.
 
-Per classificare una regione $k$, che non appartiene al training set, si confronta il suo descrittore con tutti i descrittori del training set utilizzando la misura di similarità $Sim(I, J)$. In questo modo si ottengono le misure di similarità della regione di test con il training set da cui possiamo estrarre un valore medio ($\mu_{test}$) ed una deviazione standard ($\sigma_{test}$).
+Per classificare una regione $k$, che non appartiene al training set, si confronta il suo descrittore con tutti i descrittori del training set utilizzando la medesima misura di similarità $Sim(I, J)$. In questo modo si ottengono le misure di similarità della regione di test con il training set da cui possiamo estrarre un valore medio ($\mu_{test}$) ed una deviazione standard ($\sigma_{test}$).
 
-La regione $k$ verrà quindi classificata come corretta se \mbox{$ |\mu_{training}- \mu_{test}| \le 3\sigma_{training}$}. Altrimenti verrà classificata come una regione contenente difetti.
+La regione $k$ verrà classificata come corretta se rispetta la seguente condizione:
+
+\begin{equation}
+|\mu_{training}- \mu_{test}| \le 3\sigma_{training}
+\end{equation}
+
+\noindent altrimenti verrà classificata come una regione contenente difetti.
 \pagebreak
