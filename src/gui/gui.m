@@ -101,13 +101,11 @@ function pushbutton1_Callback(hObject, eventdata, handles)
         set( handles.grid_button, 'Enable', 'off' );
         return;
     end
+    
     % Create the full file name.
     fullImageFileName = fullfile(folder, baseFileName);
-    
     set( handles.image_path ,'String', fullImageFileName );
-    
     showGridImage(handles, imread(fullImageFileName));
-    
     set( handles.grid_button, 'Enable', 'on' );
     
 
@@ -243,6 +241,12 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+
+    global training_mean;
+    global training_std;
+    global test_statistic_measures;
+    global reject;
+
     training_regions = str2num(get( handles.correct_samples, 'String' ))
     
     num_region_rows = str2double( get( handles.num_rows, 'String' ) );
@@ -258,90 +262,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
     
     sigma_coefficient = str2num( get( handles.sigma_coefficient, 'String' ) );
     
-    computeRejectedRegions( handles, image, training_regions, radii, num_region_rows, num_region_cols, sigma_coefficient );
-
-
-
-function computeRejectedRegions(handles, image, training_regions, radii, num_region_rows, num_region_cols, sigma_coefficient )
-
-    global training_mean;
-    global training_std;
-    global test_statistic_measures;
-    global reject;
-    % map the value to uniform implementation
-    mapping = getmapping(8,'u2');
-%     mapping = getmapping(8,'complete');
-
-    descriptor = getMLBPDescriptor( image, mapping, radii, num_region_rows, num_region_cols, sigma_coefficient );
-    
-    A = zeros( size(descriptor, 1) );
-
-    % A is a symmetric matrix
-    for i = 1:size(descriptor, 1)
-        for j = i:size(descriptor, 1)
-%             A(i,j) = getNormalizedCorrelation( descriptor(i, : ), descriptor( j, : ) );
-            %A(i,j) = getHistogramIntersection( descriptor(i, : ), descriptor( j, : ) );
-            %A(i,j) = getChiSquareCriterion( descriptor(i, : ), descriptor( j, : ) );
-            %A(i,j) = getLogLikelihoodRatio( descriptor(i, : ), descriptor( j, : ) );
-            A(i,j) = getCrossNormalizedCorrelation( descriptor(i, : ), descriptor( j, : ) );
-        end
-    end
-    
-    A = A - tril(A) + A';
-    
-    training_correlation = A( training_regions+1, training_regions+1 );
-    training_correlation =  training_correlation(triu(true(size(training_correlation)), 1));
-
-    %training_correlation(find(~tril(ones(size(training_correlation)))));
-
-    training_mean = mean2( training_correlation )
-    training_std = std2( training_correlation );
-
-    reject = zeros( num_region_rows*num_region_cols, 1 );
-    accept = zeros( num_region_rows*num_region_cols, 1 );
-    
-    % test_statistic_measures is a nx3 matrix
-    %
-    %   _ _ _ _ _ _ _ _ _ _ 
-    %  |_mean_|_std_|_index_|
-    %  |_ _ _ |_ _ _|_ _ _ _|  
-    %  |_ _ _ |_ _ _|_ _ _ _|
-    %  |_ _ _ |_ _ _|_ _ _ _|
-    %  |      |     |       |
-    %
-    
-    test_statistic_measures = zeros( num_region_rows*num_region_cols - length(training_regions), 3 );
-
-    not_training_counter = 1;
-    for k = 0:( num_region_rows*num_region_cols-1 )
-        if ~(any( k == training_regions ) )
-            
-            test_values = A(  k+1, training_regions+1 );
-            
-            test_values =  test_values(triu(true(size(test_values)), 1));
-
-                
-            test_mean = mean2( test_values );
-            test_std = std2( test_values );
-            
-            test_statistic_measures(not_training_counter, 1) = test_mean;
-            test_statistic_measures(not_training_counter, 2) = test_std;
-            test_statistic_measures(not_training_counter, 3) = k;
-            
-            if ( test_mean <= ( training_mean - 3*training_std ) || ...
-                    test_mean >= ( training_mean + 3*training_std ) )
-                % reject
-                reject(k+1) = k;
-            else
-                % accept
-                accept(k+1) = k;
-            end
-            not_training_counter = not_training_counter + 1;
-        end
-    end
-    
-    reject = find( reject(:) ~= 0 ) - 1;
-    reject = reject'
+    [training_mean, training_std, test_statistic_measures, reject ] = computeRejectedRegions( image, training_regions, radii, num_region_rows, num_region_cols, sigma_coefficient );
     
     set( handles.reject_regions, 'String', strcat( 'Rejected regions:  ', num2str(reject) ) );
     
@@ -357,53 +278,8 @@ function computeRejectedRegions(handles, image, training_regions, radii, num_reg
     end
     
     axes(handles.axes1);
-
+    reject
     
-    
-          
-        
-        
-    % from = 1 prendo num, rejected incluse
-    % from = x ne prendo num a partire da x
-    function plotGaussians( from, num, Title )
-    
-        
-
-        global training_mean;
-        global training_std;
-        global test_statistic_measures;
-        global reject;
-        figure;
-
-        x = test_statistic_measures(1,1) - 4*test_statistic_measures(1,2):0.0001:training_mean + 3*training_std;
-        y_training = gaussmf( x,[ training_std training_mean] );
-
-        % number of worst regions
-        y_gaussian_worst_regions = zeros( num,  length(x));
-
-        hold on;
-        cc=hsv(num+1);
-        p = zeros((num+1),1);
-
-        l = strcat({'region '},int2str((       test_statistic_measures(from:from+num,3)       ))).';
-        l(num+1) = {'training'};
-
-        counter = 1;
-        for k = from:from+num
-            y_gaussian_worst_regions( counter, :) = gaussmf( x, [ test_statistic_measures(k,2) test_statistic_measures(k,1) ] );
-            p(counter) = plot( x, y_gaussian_worst_regions(counter, :), 'color', cc(counter,:));
-            counter = counter+1;
-        end
-
-        p(num+1) = plot( x, y_training, 'color', cc(num+1,:));
-        plot( ( training_mean - 3*training_std ) , 0:0.001:1 );
-        plot( ( training_mean + 3*training_std ) , 0:0.001:1 );
-        
-        title( Title );        
-        legend( p, l,'Location','BestOutside' ); %,'Orientation','horizontal');
-        xlabel( strcat('gaussmf, P=[', num2str(training_mean), ', ', num2str(training_std), ']') );
-
-
 
 function radii_Callback(hObject, eventdata, handles)
 % hObject    handle to radii (see GCBO)
@@ -489,12 +365,15 @@ function graph_button_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+    num = str2double(get( handles.num_graph, 'String' ) );
+
+    global training_mean;
+    global training_std;
+    global test_statistic_measures;
     global reject;
 
-num = str2double(get( handles.num_graph, 'String' ) );
-
-plotGaussians( 1, num, 'Worst regions gaussian distribution' );
-plotGaussians( length(reject)+1, num, 'Gaussian distribution of the worst correct regions'  );
+    plotGaussians( training_mean, training_std, test_statistic_measures, reject, 1, num, 'Worst regions gaussian distribution' );
+    plotGaussians( training_mean, training_std, test_statistic_measures, reject, length(reject)+1, num, 'Gaussian distribution of the worst correct regions' );
 
 
 function num_graph_Callback(hObject, eventdata, handles)
