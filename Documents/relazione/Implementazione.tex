@@ -7,6 +7,13 @@ Matlab (MATrix LABoratory) è un ambiente per il calcolo numerico e l'analisi st
 
 La libreria creata è stata utilizzata in un'applicazione per la rilevazione di errori all'interno di immagini di tessiture.
 Per permettere un uso agevole del software e della configurazione dei parametri è stata sviluppata una \acf{GUI}, mostrata in figura \ref{fig:GUI}.
+I dati inseriti all'interno dei campi di input devono rispettare la sintassi del linguaggio Matlab. Ad esempio per i campi \textit{radii} e \textit{training set}, in cui è possibile inserire un array di valori, è accettata la seguente sintassi:
+
+\begin{lstlisting}
+inizio:step:fine [, inizio2:step2:fine2]
+\end{lstlisting}
+
+ad esempio se si vuole ottenere un array con i valori: $1, 3, 5, 7 $, basterà scrivere: $1:2:7$.
 
 Il codice sorgete di tutta l'applicazione è disponibile sul servizio di versioning Github (\href{http://dining-engineers.github.io/Multi-scale-Local-Binary-Pattern/}{http://dining-engineers.github.io/Multi-scale-Local-Binary-Pattern/}).\\
 
@@ -17,6 +24,28 @@ Il codice sorgete di tutta l'applicazione è disponibile sul servizio di version
 \label{fig:GUI}
 \end{center}
 \end{figure}
+
+\pagebreak
+
+Le directory sono organizzate nel modo seguente:
+
+\begin{itemize}
+	\item \textit{Dataset}: contiene le immagini del dataset;
+	\item \textit{Documents}: contiene tutti i documenti consultati per lo sviluppo dell'applicazione. In particolare, nella sottodirectory \textit{relazione} sono contenuti i sorgenti LaTeX della relazione del il file PDF della stessa;
+	\item \textit{src}: contiene il codice sorgente dell'applicazione.
+\end{itemize}
+
+L'organizzazione delle directory è raffigurata nella figura \ref{fig:orgDir}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/organizzazione_Cartelle}
+\caption{Organizzazione delle directory dell'applicazione.}
+\label{fig:orgDir}
+\end{center}
+\end{figure}
+
+\pagebreak
 
 \subsection{Analisi dell'immagine}
 \label{imp:analisi}
@@ -126,6 +155,10 @@ Sim(I, J) = \frac{\sigma_{f_{I}f_{J}}}{\sigma_{f_{I}}\sigma_{f_{J}}}
 
 \end{itemize}
 
+Tra le misure sopra descritte, è stato scelto di utilizzare la misura di similarità \textit{Normalize Correlation}. Nel caso in cui l'utente preferisca utilizzare un'altra misura di similarità è sufficiente modificare il codice nella funzione \textit{computeRejectedRegions}, dove viene specificata la misura di similarità in uso.
+
+
+
 \pagebreak
 \subsection{Testing}
 
@@ -143,4 +176,18 @@ La regione $k$ verrà classificata come corretta se rispetta la seguente condizi
 \end{equation}
 
 \noindent altrimenti verrà classificata come una regione contenente difetti.
+
+\pagebreak
+
+\subsubsection{Dataset}
+Il \textit{dataset} utilizzato per testare l'applicazione consiste in un insieme di immagini che raffigurano la trama di tessuti. All'interno di alcune di queste immagini sono presenti uno o più difetti che la procedura dovrà identificare. In figura \ref{fig:esDataset} sono rappresentate alcune immagini del dataset.
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=.95\textwidth]{img/esempioDataset}
+\caption{ Esempio di immagini utilizzate nel dataset.}
+\label{fig:esDataset}
+\end{center}
+\end{figure}
+
 \pagebreak
